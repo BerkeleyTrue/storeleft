@@ -26,7 +26,7 @@ const columns: GridColDef[] = [
   { headerName: 'Name', field: 'name', type: 'string' },
 ];
 
-export const List = () => {
+export const ItemList = () => {
   return (
     <Box height='500px' width='100%'>
       <DataGrid

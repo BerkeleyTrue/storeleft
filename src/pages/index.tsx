@@ -1,6 +1,6 @@
 import { AppHead } from '../components/AppHead';
 import { Layout } from '../components/Layout';
-import { List } from '../components/Items/List';
+import { Typography } from '@mui/material';
 
 const Index = () => {
   return (
@@ -9,7 +9,9 @@ const Index = () => {
         <meta name='description' content='Foo Bar' />
       </AppHead>
       <Layout>
-        <List />
+        <Typography>
+          Home
+        </Typography>
       </Layout>
     </>
   );

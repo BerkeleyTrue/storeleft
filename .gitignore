@@ -13,6 +13,7 @@ dist
 cache
 dist-ssr
 *.local
+storeleft
 
 # Editor directories and files
 .vscode/*

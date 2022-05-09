@@ -17,6 +17,7 @@
     "@mui/x-data-grid": "^5.10.0",
     "lodash": "^4.17.21",
     "next": "^12.1.6",
+    "pouchdb": "^7.3.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "rxjs": "^7.5.5"
@@ -25,6 +26,7 @@
     "@types/express": "^4.17.13",
     "@types/jest": "^27.5.0",
     "@types/node": "^17.0.31",
+    "@types/pouchdb": "^6.4.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "concurrently": "^7.1.0",

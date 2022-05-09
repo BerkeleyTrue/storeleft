@@ -2,6 +2,8 @@ import _ from 'lodash/fp';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box } from '@mui/system';
 
+import { useAllDocs } from '../../lib/pouchdb/useAllDocs';
+
 const getRowId = _.get('_id');
 
 const data = [
@@ -27,10 +29,12 @@ const columns: GridColDef[] = [
 ];
 
 export const ItemList = () => {
+  const [{ data }] = useAllDocs({ query: { skip: 0, limit: 100 }  });
+
   return (
     <Box height='500px' width='100%'>
       <DataGrid
-        rows={data}
+        rows={data?.rows || []}
         getRowId={getRowId}
         columns={columns}
         pageSize={10}

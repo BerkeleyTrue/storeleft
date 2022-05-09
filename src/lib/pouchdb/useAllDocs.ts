@@ -6,6 +6,7 @@ import { initialState, computeNextState, hasDepsChanged } from './utils/state';
 export interface AllDocsQuery {
   limit: number;
   skip: number;
+  include_docs: boolean;
 }
 
 export interface UseAllDocsOptions {

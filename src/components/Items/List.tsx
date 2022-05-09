@@ -12,8 +12,15 @@ const columns: GridColDef[] = [
 ];
 
 export const ItemList = () => {
-  const [{ data }] = useAllDocs({ query: { skip: 0, limit: 100, include_docs: true } });
-  const rows = _.flow(_.get('rows'), _.map('doc'))(data);
+  const [{ data }] = useAllDocs({
+    query: { skip: 0, limit: 100, include_docs: true },
+  });
+
+  const rows = _.flow(
+    _.get('rows'),
+    _.map('doc'),
+    _.filter({ type: 'item' })
+  )(data);
 
   return (
     <Box height='500px' width='100%'>

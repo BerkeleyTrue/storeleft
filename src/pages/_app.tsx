@@ -3,7 +3,7 @@ import { AppProps } from 'next/app';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import PouchDb from 'pouchdb';
-import { SnackbarProvider  } from 'notistack';
+import { SnackbarProvider } from 'notistack';
 
 import { theme } from '../theme';
 import { PouchDbProvider } from '../lib/pouchdb/provider';

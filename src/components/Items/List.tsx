@@ -3,31 +3,29 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box } from '@mui/system';
 
 import { useAllDocs } from '../../lib/pouchdb/useAllDocs';
+import { useItemHeaders } from '../../services/config/use-headers';
 
 const getRowId = _.get('_id');
-
-const columns: GridColDef[] = [
-  { headerName: 'Id', field: '_id' },
-  { headerName: 'Name', field: 'name', type: 'string' },
-];
 
 export const ItemList = () => {
   const [{ data }] = useAllDocs({
     query: { skip: 0, limit: 100, include_docs: true },
   });
 
+  const headers = useItemHeaders();
+
   const rows = _.flow(
     _.get('rows'),
     _.map('doc'),
-    _.filter({ type: 'item' })
+    _.filter({ type: 'item' }),
   )(data);
 
   return (
-    <Box height='500px' width='100%'>
+    <Box height='500px' width='100%' px="1em">
       <DataGrid
         rows={rows}
         getRowId={getRowId}
-        columns={columns}
+        columns={headers}
         pageSize={10}
         rowsPerPageOptions={[10, 50, 100, 1000]}
       />

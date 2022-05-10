@@ -37,8 +37,8 @@ export const Layout = ({ children }: PropsWithChildren<{}>) => {
         onClose={setOpen.off}
       />
       <Toolbar />
-      <Stack height='100%' width='100%' overflow-x='hidden'>
-        <Box flexGrow='1' px='1em'>
+      <Stack height='100%' width='100vw' overflow-x='hidden'>
+        <Box flexGrow='1' px='1em' mt='2em'>
           {children}
         </Box>
       </Stack>

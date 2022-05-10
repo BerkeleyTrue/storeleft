@@ -1,5 +1,5 @@
 import _ from 'lodash/fp';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { Box } from '@mui/system';
 
 import { useAllDocs } from '../../lib/pouchdb/useAllDocs';
@@ -8,9 +8,11 @@ import { useItemHeaders } from '../../services/config/use-headers';
 const getRowId = _.get('_id');
 
 export const ItemList = () => {
-  const [{ data }] = useAllDocs({
-    query: { skip: 0, limit: 100, include_docs: true },
-  });
+  const { data, error } = useAllDocs({ query: { limit: 100, skip: 0, include_docs: true }});
+
+  if (error) {
+    throw error;
+  }
 
   const headers = useItemHeaders();
 

@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 import { useBoolean } from '@chakra-ui/hooks';
-import { AppBar, IconButton, Stack, Toolbar, Typography } from '@mui/material';
+import { AppBar, IconButton, Stack, Toolbar } from '@mui/material';
 import { Box } from '@mui/system';
 import { Menu } from '@mui/icons-material';
 import { grey } from '@mui/material/colors';

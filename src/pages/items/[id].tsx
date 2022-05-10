@@ -1,5 +1,6 @@
 import _ from 'lodash/fp';
-import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import { Card, CardHeader } from '@mui/material';
+import { Box } from '@mui/system';
 import { GetServerSideProps, InferGetStaticPropsType, NextPage } from 'next';
 
 import { AppHead } from '../../components/AppHead';
@@ -29,12 +30,12 @@ const ItemView: NextPage<
     <>
       <AppHead subTitle={`${itemId}`} />
       <Layout>
-        <Card>
-          <CardHeader title={`Item: ${itemId}`} />
-          <CardContent>
-            <ViewItem />
-          </CardContent>
-        </Card>
+        <Box mb='1em'>
+          <Card>
+            <CardHeader title={`Item: ${itemId}`} />
+          </Card>
+        </Box>
+        <ViewItem itemId={itemId} />
       </Layout>
     </>
   );

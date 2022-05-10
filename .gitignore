@@ -25,3 +25,10 @@ storeleft
 *.njsproj
 *.sln
 *.sw?
+.storeleftrc
+.storeleftrc.yml
+.storeleftrc.yaml
+.storeleftrc.js
+.storeleftrc.cjs
+storeleft.config.js
+storeleft.config.cjs

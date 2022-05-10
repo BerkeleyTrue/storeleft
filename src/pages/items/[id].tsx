@@ -1,20 +1,43 @@
-import { Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import _ from 'lodash/fp';
+import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import { GetServerSideProps, InferGetStaticPropsType, NextPage } from 'next';
 
 import { AppHead } from '../../components/AppHead';
+import { ViewItem } from '../../components/Items/View';
 import { Layout } from '../../components/Layout';
 
-const EditItem = () => {
+interface Props {
+  itemId: string;
+}
+
+export const getServerSideProps: GetServerSideProps<
+  Props,
+  { id: string }
+> = async ({ query: { id } }) => {
+  const itemId = _.join('/', _.castArray(id));
+  return {
+    props: {
+      itemId,
+    },
+  };
+};
+
+const ItemView: NextPage<
+  InferGetStaticPropsType<typeof getServerSideProps>
+> = ({ itemId }) => {
   return (
     <>
-      <AppHead subTitle={`item.${1324}`} />
+      <AppHead subTitle={`${itemId}`} />
       <Layout>
-        <Box height='4em'>
-          <Typography>Item 1234</Typography>
-        </Box>
+        <Card>
+          <CardHeader title={`Item: ${itemId}`} />
+          <CardContent>
+            <ViewItem />
+          </CardContent>
+        </Card>
       </Layout>
     </>
   );
 };
 
-export default EditItem;
+export default ItemView;

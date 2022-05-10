@@ -38,10 +38,9 @@ export const Layout = ({ children }: PropsWithChildren<{}>) => {
       />
       <Toolbar />
       <Stack height='100%' width='100%' overflow-x='hidden'>
-        <Box height='4em'>
-          <Typography>Items</Typography>
+        <Box flexGrow='1' px='1em'>
+          {children}
         </Box>
-        <Box flexGrow='1'>{children}</Box>
       </Stack>
     </Box>
   );

@@ -1,6 +1,6 @@
 import _ from 'lodash/fp';
-import { useMemo } from 'react';
-import { Accessor, Column, ColumnGroup, useTable } from 'react-table';
+import { useCallback, useMemo } from 'react';
+import { Accessor, Column, ColumnGroup, Row, useTable } from 'react-table';
 // import { useRouter } from 'next/router';
 import {
   Heading,
@@ -21,25 +21,43 @@ import { useAllDocs } from '../../lib/pouchdb/useAllDocs';
 import { useConfig } from '../../services/config/use-config';
 import { DataDefinition, DataField } from '../../types';
 import dayjs from 'dayjs';
+import { useRouter } from 'next/router';
 
-type AccessorFactory = (field: string) => (row: DataField) => any
+type AccessorFactory = (field: string) => (row: DataField) => any;
 
-const createFieldValueAccessor: AccessorFactory = (field) => (row) => _.get(field, row);
+const createFieldValueAccessor: AccessorFactory = (field) => (row) =>
+  _.get(field, row);
 
 const formatDate = (date: string) => dayjs(date).format('YYYY/MM/DD HH:MM');
 
-const accessorFactoryMap: { [key: string]: AccessorFactory } =
-  {
-    libraryStyleStatus: (field) => _.flow(createFieldValueAccessor(field), (isCheckedIn) =>
+const accessorFactoryMap: { [key: string]: AccessorFactory } = {
+  libraryStyleStatus: (field) =>
+    _.flow(createFieldValueAccessor(field), (isCheckedIn) =>
       isCheckedIn ? 'Checked In' : 'Checked Out'
     ),
-    list: (field) => _.flow(createFieldValueAccessor(field), _.join('\n')),
-    lastModified: (field) => _.flow(createFieldValueAccessor(field), formatDate),
-    lastDate: (field) => _.flow(createFieldValueAccessor(field), formatDate),
-  };
+  list: (field) => _.flow(createFieldValueAccessor(field), _.join('\n')),
+  lastModified: (field) => _.flow(createFieldValueAccessor(field), formatDate),
+  lastDate: (field) => _.flow(createFieldValueAccessor(field), formatDate),
+};
 
+export const TableRow = ({
+  getRowProps,
+  cells,
+  original,
+}: Row) => {
+  const router = useRouter();
+  const handleClick = useCallback(() => {
+    router.push(`/items/${(original as any)._id}`);
+  }, [router]);
+  return (
+    <Tr {...getRowProps()} onClick={handleClick}>
+      {cells.map((cell) => (
+        <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
+      ))}
+    </Tr>
+  );
+};
 export const ItemList = () => {
-  // const router = useRouter();
   const allDocs = useAllDocs({
     query: { limit: 100, skip: 0, include_docs: true },
   });
@@ -62,7 +80,9 @@ export const ItemList = () => {
           columns: _.map(
             ({ displayName, name, type }: DataField) => ({
               Header: displayName,
-              accessor: accessorFactoryMap[type] ? accessorFactoryMap[type](name) : name,
+              accessor: (accessorFactoryMap[type]
+                ? accessorFactoryMap[type](name)
+                : name) as any,
             }),
             fields
           ),
@@ -87,7 +107,9 @@ export const ItemList = () => {
             {headerGroups.map(({ getHeaderGroupProps, headers }) => (
               <Tr {...getHeaderGroupProps()}>
                 {headers.map(({ getHeaderProps, render }) => (
-                  <Th align='center' {...getHeaderProps()}>{render('Header')}</Th>
+                  <Th align='center' {...getHeaderProps()}>
+                    {render('Header')}
+                  </Th>
                 ))}
               </Tr>
             ))}
@@ -95,13 +117,8 @@ export const ItemList = () => {
           <Tbody {...getTableBodyProps()}>
             {rows.map((row) => {
               prepareRow(row);
-              return (
-                <Tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => (
-                    <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
-                  ))}
-                </Tr>
-              );
+              const { key } = row.getRowProps();
+              return <TableRow key={key} {...row}/>;
             })}
           </Tbody>
         </Table>

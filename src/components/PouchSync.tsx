@@ -1,5 +1,6 @@
 import { useToast } from '@chakra-ui/react';
-import { PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren } from 'react';
+import { useAppEffect } from '../lib/hooks/use-app-effect';
 
 import { usePouchDbContext } from '../lib/pouchdb/useContext';
 
@@ -7,7 +8,7 @@ export const PouchSync = ({ children }: PropsWithChildren<{}>) => {
   const toast = useToast();
   const { db } = usePouchDbContext();
 
-  useEffect(() => {
+  useAppEffect(() => {
     const remoteUrl = `${window.location.origin}/api/db/storedown`;
     toast({
       title: 'Syncing db...',
@@ -20,7 +21,7 @@ export const PouchSync = ({ children }: PropsWithChildren<{}>) => {
         variant: 'success',
       });
     });
-  }, [toast, db]);
+  }, [db]);
 
   return <>{children}</>;
 };

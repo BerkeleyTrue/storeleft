@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect, useRef } from 'react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { Flex, Box, useBreakpointValue } from '@chakra-ui/react';
 

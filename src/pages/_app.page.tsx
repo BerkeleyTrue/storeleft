@@ -1,8 +1,9 @@
-import React from 'react';
+import { StrictMode } from 'react';
 import { AppProps } from 'next/app';
 import PouchDb from 'pouchdb';
 import { ChakraProvider } from '@chakra-ui/react';
 
+import { Layout } from './Layout';
 import { theme } from '../theme';
 import { PouchSync } from '../components/PouchSync';
 import { Fonts } from '../components/Fonts';
@@ -12,16 +13,18 @@ const db = new PouchDb('storeleft');
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
-    <React.StrictMode>
+    <StrictMode>
       <Fonts />
       <ChakraProvider theme={theme}>
         <PouchDbProvider db={db}>
           <PouchSync>
-            <Component {...pageProps} />
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
           </PouchSync>
         </PouchDbProvider>
       </ChakraProvider>
-    </React.StrictMode>
+    </StrictMode>
   );
 };
 

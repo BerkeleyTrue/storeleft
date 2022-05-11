@@ -1,8 +1,6 @@
 import { Heading } from '@chakra-ui/react';
 
 import { AppHead } from '../components/AppHead';
-import { Layout } from './Layout';
-
 
 const Index = () => {
   return (
@@ -10,11 +8,7 @@ const Index = () => {
       <AppHead subTitle='Items'>
         <meta name='description' content='Home page of My Storeleft' />
       </AppHead>
-      <Layout>
-        <Heading>
-          Home
-        </Heading>
-      </Layout>
+      <Heading>Home</Heading>
     </>
   );
 };

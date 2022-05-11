@@ -2,7 +2,7 @@ import { ReactEventHandler } from 'react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { Box, Button, Container, Flex } from '@chakra-ui/react';
 
-import { AppLink } from './Links';
+import { AppLink } from '../Links';
 
 interface Props {
   h: number;

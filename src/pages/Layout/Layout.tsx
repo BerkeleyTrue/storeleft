@@ -1,4 +1,5 @@
-import { ComponentProps, PropsWithChildren } from 'react';
+import { ComponentProps, PropsWithChildren, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useBoolean } from '@chakra-ui/hooks';
 import { Flex, Box, useBreakpointValue } from '@chakra-ui/react';
 
@@ -37,10 +38,15 @@ const mdVariant: Variant = {
 };
 
 export const Layout = ({ children }: PropsWithChildren<{}>) => {
+  const router = useRouter();
   const [isSidebarOpen, setSidebar] = useBoolean(false);
   const variants =
     useBreakpointValue<Variant>({ base: smVariant, md: mdVariant }) ||
     smVariant;
+
+  useEffect(() => {
+    setSidebar.off();
+  }, [router.pathname]);
 
   return (
     <Flex width='100vw' height='100vh'>

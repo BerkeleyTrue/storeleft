@@ -1,10 +1,15 @@
-import { HamburgerIcon } from '@chakra-ui/icons';
-import { Flex, Button, Divider, VStack, Spacer } from '@chakra-ui/react';
 import { ReactEventHandler } from 'react';
+import { HamburgerIcon } from '@chakra-ui/icons';
+import { Flex, Button, Divider, VStack, Spacer, Text } from '@chakra-ui/react';
 
 import { NextLink } from '../../components/Links';
+import { NavItem } from './Nav/NavItem';
 
 const mainNav = [
+  {
+    name: 'Home',
+    href: '/',
+  },
   {
     name: 'Items',
     href: '/items',
@@ -34,24 +39,25 @@ const secondary = [
   },
 ];
 
-interface Props {
-  onMenuClick: ReactEventHandler;
-}
-
-export const SideBarContent = ({ onMenuClick }: Props) => {
+export const SideBarContent = () => {
   return (
-    <Flex h='100%' w='100%' flexFlow='column' justifyContent='space-between'>
+    <Flex
+      as='nav'
+      h='100%'
+      w='100%'
+      flexFlow='column'
+      justifyContent='space-between'
+    >
+      <Flex px='4' py='5' align='center'>
+        <Text fontSize='2xl' ml='2' color={'white'} fontWeight='semibold'>
+          Store Left
+        </Text>
+      </Flex>
       <VStack w='100%' alignItems='stretch'>
-        <Flex justifyContent='flex-end' direction='row' mb='8'>
-          <HamburgerIcon onClick={onMenuClick} mr='4' />
-        </Flex>
-
         {mainNav.map(({ name, href }) => (
-          <NextLink key={name} href={href}>
-            <Button w='100%' display='flex' justifyContent='left'>
-              {name}
-            </Button>
-          </NextLink>
+          <NavItem key={name} href={href}>
+            {name}
+          </NavItem>
         ))}
       </VStack>
       <Divider sx={{ my: 4 }} />

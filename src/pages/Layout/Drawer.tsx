@@ -29,13 +29,13 @@ export function AppDrawer({ isOpen, onClose, varient, sidebarWidth }: Props) {
       h='100%'
       {...sidebarStyles}
     >
-      <SideBarContent onMenuClick={onClose as MouseEventHandler} />
+      <SideBarContent />
     </Box>
   ) : (
     <Drawer isOpen={isOpen} onClose={onClose as () => void} placement='left'>
       <DrawerOverlay />
       <DrawerContent pt='8' px='4' {...sidebarStyles}>
-        <SideBarContent onMenuClick={onClose as MouseEventHandler} />
+        <SideBarContent />
       </DrawerContent>
     </Drawer>
   );

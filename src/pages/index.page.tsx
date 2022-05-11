@@ -1,7 +1,7 @@
 import { Heading } from '@chakra-ui/react';
 
 import { AppHead } from '../components/AppHead';
-import { Layout } from '../components/Layout';
+import { Layout } from './Layout';
 
 
 const Index = () => {

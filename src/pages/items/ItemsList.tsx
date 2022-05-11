@@ -1,14 +1,13 @@
 import _ from 'lodash/fp';
+import dayjs from 'dayjs';
 import { useCallback, useMemo } from 'react';
-import { Accessor, Column, ColumnGroup, Row, useTable } from 'react-table';
-// import { useRouter } from 'next/router';
+import { Column, ColumnGroup, Row, useTable } from 'react-table';
+import { useRouter } from 'next/router';
 import {
   Heading,
-  Box,
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
@@ -20,8 +19,6 @@ import {
 import { useAllDocs } from '../../lib/pouchdb/useAllDocs';
 import { useConfig } from '../../services/config/use-config';
 import { DataDefinition, DataField } from '../../types';
-import dayjs from 'dayjs';
-import { useRouter } from 'next/router';
 
 type AccessorFactory = (field: string) => (row: DataField) => any;
 

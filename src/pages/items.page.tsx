@@ -1,6 +1,6 @@
+import { Layout } from './Layout';
+import { ItemList } from './items/ItemsList';
 import { AppHead } from '../components/AppHead';
-import { ItemList } from '../components/Items/List';
-import { Layout } from '../components/Layout';
 
 export const Items = () => {
   return (

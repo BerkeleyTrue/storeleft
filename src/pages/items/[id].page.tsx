@@ -3,8 +3,8 @@ import { GetServerSideProps, InferGetStaticPropsType, NextPage } from 'next';
 import { Heading, Box } from '@chakra-ui/react';
 
 import { AppHead } from '../../components/AppHead';
-import { ViewItem } from '../../components/Items/View';
-import { Layout } from '../../components/Layout';
+import { ViewItem } from './View';
+import { Layout } from '../Layout';
 
 interface Props {
   itemId: string;

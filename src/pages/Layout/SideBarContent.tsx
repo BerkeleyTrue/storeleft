@@ -2,7 +2,7 @@ import { HamburgerIcon } from '@chakra-ui/icons';
 import { Flex, Button, Divider, VStack, Spacer } from '@chakra-ui/react';
 import { ReactEventHandler } from 'react';
 
-import { NextLink } from '../Links';
+import { NextLink } from '../../components/Links';
 
 const mainNav = [
   {

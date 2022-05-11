@@ -38,8 +38,6 @@ const accessorFactoryMap: { [key: string]: AccessorFactory } =
     lastDate: (field) => _.flow(createFieldValueAccessor(field), formatDate),
   };
 
-export const getAccessor = (field: string) => _.flow(_.get(_.__, accessorFactoryMap), _.defaultTo(_.get(field)));
-
 export const ItemList = () => {
   // const router = useRouter();
   const allDocs = useAllDocs({
@@ -64,7 +62,7 @@ export const ItemList = () => {
           columns: _.map(
             ({ displayName, name, type }: DataField) => ({
               Header: displayName,
-              accessor: getAccessor(type),
+              accessor: accessorFactoryMap[type] ? accessorFactoryMap[type](name) : name,
             }),
             fields
           ),
@@ -83,13 +81,13 @@ export const ItemList = () => {
     <VStack>
       <Heading>Items</Heading>
       <TableContainer>
-        <Table variant='unstyled' {...getTableProps()}>
+        <Table variant='striped' {...getTableProps()}>
           <TableCaption>Items in Storage</TableCaption>
           <Thead>
             {headerGroups.map(({ getHeaderGroupProps, headers }) => (
               <Tr {...getHeaderGroupProps()}>
                 {headers.map(({ getHeaderProps, render }) => (
-                  <Th {...getHeaderProps}>{render('Header')}</Th>
+                  <Th align='center' {...getHeaderProps()}>{render('Header')}</Th>
                 ))}
               </Tr>
             ))}

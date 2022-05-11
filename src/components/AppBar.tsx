@@ -6,17 +6,17 @@ import { AppLink } from './Links';
 
 interface Props {
   h: number;
-  showButton: boolean;
+  showMenuButton: boolean;
   onButtonClick: ReactEventHandler;
 }
 
-export const AppBar = ({ showButton, onButtonClick, h }: Props) => {
+export const AppBar = ({ showMenuButton, onButtonClick, h }: Props) => {
   return (
     <>
       <Box h={h} bg='darker.700'>
         <Container px={{ base: '4', md: '1' }} h='100%'>
           <Flex h='100%' alignItems='center'>
-            {showButton && <HamburgerIcon onClick={onButtonClick} mr='4' />}
+            {showMenuButton && <HamburgerIcon onClick={onButtonClick} mr='4' />}
             <AppLink href='/'>
               <Button h='100%' bg='darker.700'>
                 StoreLeft

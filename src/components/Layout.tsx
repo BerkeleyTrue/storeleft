@@ -2,11 +2,11 @@ import { PropsWithChildren } from 'react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { Flex, Box, useBreakpointValue } from '@chakra-ui/react';
 
-import { AppDrawer } from './Drawer';
+import { AppDrawer, TNavigation } from './Drawer';
 import { AppBar } from './AppBar';
 
 interface Variant {
-  navigation: 'drawer' | 'sidebar';
+  navigation: TNavigation
   showButton: boolean;
 }
 
@@ -20,11 +20,11 @@ export const Layout = ({ children }: PropsWithChildren<{}>) => {
 
   return (
     <Flex width='100vw' height='100vh'>
-
       <AppDrawer
         isOpen={isSidebarOpen}
         onMenuClick={setSidebar.toggle}
         onClose={setSidebar.off}
+        varient={variants.navigation}
       />
 
       <Flex
@@ -36,7 +36,7 @@ export const Layout = ({ children }: PropsWithChildren<{}>) => {
       >
         <AppBar
           h={headerSize}
-          showButton={variants.showButton}
+          showMenuButton={variants.showButton}
           onButtonClick={setSidebar.toggle}
         />
 

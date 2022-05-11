@@ -1,82 +1,41 @@
-import { ReactEventHandler } from 'react';
+import { MouseEventHandler, ReactEventHandler } from 'react';
 import {
-  Divider,
-  List,
+  Box,
   Drawer,
-  IconButton,
-  ListItem,
-  DrawerHeader,
+  DrawerContent,
+  DrawerOverlay,
 } from '@chakra-ui/react';
-import { HamburgerIcon } from '@chakra-ui/icons';
+import { SideBarContent } from './SideBarContent';
 
-import { AppLink } from './Links';
+const sidebarStyles = {
+  bg: 'darker.800',
+};
+
+export type TNavigation = 'drawer' | 'sidebar';
 
 interface Props {
   isOpen: boolean;
   onMenuClick: ReactEventHandler;
   onClose: ReactEventHandler;
+  varient: string;
 }
 
-const mainNav = [
-  {
-    name: 'Items',
-    href: '/items',
-  },
-  {
-    name: 'Containers',
-    href: '/containers',
-  },
-  {
-    name: 'Tree',
-    href: '/tree',
-  },
-  {
-    name: 'Search',
-    href: '/search',
-  },
-];
-
-const secondary = [
-  {
-    name: 'Config',
-    href: '/config',
-  },
-  {
-    name: 'Connection',
-    href: '/connection',
-  },
-];
-export function AppDrawer({ isOpen, onMenuClick, onClose }: Props) {
-  return (
-    <Drawer isOpen={isOpen} onClose={onClose as () => void}>
-      <DrawerHeader
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          px: [1],
-        }}
-      >
-        <IconButton onClick={onMenuClick} aria-label='menu button'>
-          <HamburgerIcon />
-        </IconButton>
-      </DrawerHeader>
-      <Divider />
-      <List>
-        <>
-          {mainNav.map(({ name, href }) => (
-            <AppLink key={name} href={href}>
-              <ListItem>{name}</ListItem>
-            </AppLink>
-          ))}
-          <Divider sx={{ my: 1 }} />
-          {secondary.map(({ name, href }) => (
-            <AppLink key={name} href={href}>
-              <ListItem key={name}>{name}</ListItem>
-            </AppLink>
-          ))}
-        </>
-      </List>
+export function AppDrawer({ isOpen, onClose, varient }: Props) {
+  return varient === 'sidebar' ? (
+    <Box
+      p={5}
+      w={{ base: '64', xl: '80', '2xl': '96' }}
+      h='100%'
+      {...sidebarStyles}
+    >
+      <SideBarContent onMenuClick={onClose as MouseEventHandler} />
+    </Box>
+  ) : (
+    <Drawer isOpen={isOpen} onClose={onClose as () => void} placement='left'>
+      <DrawerOverlay />
+      <DrawerContent pt='8' px='4' {...sidebarStyles}>
+        <SideBarContent onMenuClick={onClose as MouseEventHandler} />
+      </DrawerContent>
     </Drawer>
   );
 }

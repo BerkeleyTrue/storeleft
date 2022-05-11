@@ -1,6 +1,7 @@
 import _ from 'lodash/fp';
-import { useCallback } from 'react';
-import { useRouter } from 'next/router';
+import { useMemo } from 'react';
+import { Accessor, Column, ColumnGroup, useTable } from 'react-table';
+// import { useRouter } from 'next/router';
 import {
   Heading,
   Box,
@@ -17,67 +18,94 @@ import {
 } from '@chakra-ui/react';
 
 import { useAllDocs } from '../../lib/pouchdb/useAllDocs';
-import { useItemHeaders } from '../../services/config/use-headers';
+import { useConfig } from '../../services/config/use-config';
+import { DataDefinition, DataField } from '../../types';
+import dayjs from 'dayjs';
+
+type AccessorFactory = (field: string) => (row: DataField) => any
+
+const createFieldValueAccessor: AccessorFactory = (field) => (row) => _.get(field, row);
+
+const formatDate = (date: string) => dayjs(date).format('YYYY/MM/DD HH:MM');
+
+const accessorFactoryMap: { [key: string]: AccessorFactory } =
+  {
+    libraryStyleStatus: (field) => _.flow(createFieldValueAccessor(field), (isCheckedIn) =>
+      isCheckedIn ? 'Checked In' : 'Checked Out'
+    ),
+    list: (field) => _.flow(createFieldValueAccessor(field), _.join('\n')),
+    lastModified: (field) => _.flow(createFieldValueAccessor(field), formatDate),
+    lastDate: (field) => _.flow(createFieldValueAccessor(field), formatDate),
+  };
+
+export const getAccessor = (field: string) => _.flow(_.get(_.__, accessorFactoryMap), _.defaultTo(_.get(field)));
 
 export const ItemList = () => {
-  const router = useRouter();
-  const { data, error } = useAllDocs({
+  // const router = useRouter();
+  const allDocs = useAllDocs({
     query: { limit: 100, skip: 0, include_docs: true },
   });
 
-  if (error) {
-    return (
-      <Box>
-        <Heading>Error fetching data</Heading>
-      </Box>
-    );
-  }
+  const data = useMemo(() => {
+    return _.flow(
+      _.get('rows'),
+      _.map('doc'),
+      _.filter({ type: 'item' })
+    )(allDocs.data);
+  }, [allDocs.data]);
 
-  const headers = useItemHeaders();
+  const configFetch = useConfig();
+  const columns = useMemo<Column[]>(() => {
+    return _.flow(
+      _.get('dataDefinition'),
+      _.map(
+        ({ displayName, fields }: DataDefinition): ColumnGroup => ({
+          Header: displayName,
+          columns: _.map(
+            ({ displayName, name, type }: DataField) => ({
+              Header: displayName,
+              accessor: getAccessor(type),
+            }),
+            fields
+          ),
+        })
+      )
+    )(configFetch.config);
+  }, [configFetch.config]);
 
-  const rows = _.flow(
-    _.get('rows'),
-    _.map('doc'),
-    _.filter({ type: 'item' })
-  )(data);
+  const { headerGroups, getTableProps, getTableBodyProps, rows, prepareRow } =
+    useTable({
+      columns,
+      data,
+    });
 
   return (
     <VStack>
       <Heading>Items</Heading>
       <TableContainer>
-        <Table variant='simple'>
-          <TableCaption>Imperial to metric conversion factors</TableCaption>
+        <Table variant='unstyled' {...getTableProps()}>
+          <TableCaption>Items in Storage</TableCaption>
           <Thead>
-            <Tr>
-              <Th>To convert</Th>
-              <Th>into</Th>
-              <Th isNumeric>multiply by</Th>
-            </Tr>
+            {headerGroups.map(({ getHeaderGroupProps, headers }) => (
+              <Tr {...getHeaderGroupProps()}>
+                {headers.map(({ getHeaderProps, render }) => (
+                  <Th {...getHeaderProps}>{render('Header')}</Th>
+                ))}
+              </Tr>
+            ))}
           </Thead>
-          <Tbody>
-            <Tr>
-              <Td>inches</Td>
-              <Td>millimetres (mm)</Td>
-              <Td isNumeric>25.4</Td>
-            </Tr>
-            <Tr>
-              <Td>feet</Td>
-              <Td>centimetres (cm)</Td>
-              <Td isNumeric>30.48</Td>
-            </Tr>
-            <Tr>
-              <Td>yards</Td>
-              <Td>metres (m)</Td>
-              <Td isNumeric>0.91444</Td>
-            </Tr>
+          <Tbody {...getTableBodyProps()}>
+            {rows.map((row) => {
+              prepareRow(row);
+              return (
+                <Tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => (
+                    <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
+                  ))}
+                </Tr>
+              );
+            })}
           </Tbody>
-          <Tfoot>
-            <Tr>
-              <Th>To convert</Th>
-              <Th>into</Th>
-              <Th isNumeric>multiply by</Th>
-            </Tr>
-          </Tfoot>
         </Table>
       </TableContainer>
     </VStack>

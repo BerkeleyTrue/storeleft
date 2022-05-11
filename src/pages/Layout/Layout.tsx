@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useRef } from 'react';
+import { PropsWithChildren } from 'react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { Flex, Box, useBreakpointValue } from '@chakra-ui/react';
 
@@ -25,6 +25,7 @@ export const Layout = ({ children }: PropsWithChildren<{}>) => {
         onMenuClick={setSidebar.toggle}
         onClose={setSidebar.off}
         varient={variants.navigation}
+        sidebarWidth={{ base: '64', xl: '80', '2xl': '96' }}
       />
 
       <Flex

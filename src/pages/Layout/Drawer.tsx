@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactEventHandler } from 'react';
+import { ComponentProps, MouseEventHandler, ReactEventHandler } from 'react';
 import {
   Box,
   Drawer,
@@ -18,13 +18,14 @@ interface Props {
   onMenuClick: ReactEventHandler;
   onClose: ReactEventHandler;
   varient: string;
+  sidebarWidth: ComponentProps<typeof Box>['width'];
 }
 
-export function AppDrawer({ isOpen, onClose, varient }: Props) {
+export function AppDrawer({ isOpen, onClose, varient, sidebarWidth }: Props) {
   return varient === 'sidebar' ? (
     <Box
       p={5}
-      w={{ base: '64', xl: '80', '2xl': '96' }}
+      w={sidebarWidth}
       h='100%'
       {...sidebarStyles}
     >

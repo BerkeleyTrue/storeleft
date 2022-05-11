@@ -1,8 +1,5 @@
-import { ReactEventHandler } from 'react';
-import { HamburgerIcon } from '@chakra-ui/icons';
-import { Flex, Button, Divider, VStack, Spacer, Text } from '@chakra-ui/react';
+import { Flex, Divider, VStack, Spacer, Text } from '@chakra-ui/react';
 
-import { NextLink } from '../../components/Links';
 import { NavItem } from './Nav/NavItem';
 
 const mainNav = [
@@ -63,11 +60,9 @@ export const SideBarContent = () => {
       <Divider sx={{ my: 4 }} />
       <VStack>
         {secondary.map(({ name, href }) => (
-          <NextLink key={name} href={href}>
-            <Button w='100%' display='flex' justifyContent='left'>
-              {name}
-            </Button>
-          </NextLink>
+          <NavItem key={name} href={href}>
+            {name}
+          </NavItem>
         ))}
       </VStack>
       <Spacer />

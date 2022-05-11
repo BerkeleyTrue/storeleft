@@ -1,17 +1,19 @@
+import { Heading } from '@chakra-ui/react';
+
 import { AppHead } from '../components/AppHead';
 import { Layout } from '../components/Layout';
-import { Typography } from '@mui/material';
+
 
 const Index = () => {
   return (
     <>
       <AppHead subTitle='Items'>
-        <meta name='description' content='Foo Bar' />
+        <meta name='description' content='Home page of My Storeleft' />
       </AppHead>
       <Layout>
-        <Typography>
+        <Heading>
           Home
-        </Typography>
+        </Heading>
       </Layout>
     </>
   );

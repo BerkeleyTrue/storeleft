@@ -1,22 +1,22 @@
-import { ElementType, PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import NextLink from 'next/link';
-import { Link as MLink } from '@mui/material';
-import { LinkProps } from '@mui/material/Link/Link';
 
-interface Props {
+import { Link as CLink, LinkProps } from '@chakra-ui/react';
+
+interface Props extends LinkProps {
   href: string;
 }
 
-export const MainLink = <D extends ElementType>({
+export const AppLink = ({
   children,
   href,
   ...props
-}: LinkProps<D, PropsWithChildren<Props>>) => (
+}: PropsWithChildren<Props>) => (
   <NextLink href={href} passHref>
-    <MLink underline='hover' {...props}>
+    <CLink underline='hover' {...props}>
       {children}
-    </MLink>
+    </CLink>
   </NextLink>
 );
 
-export { MLink, NextLink };
+export { CLink, NextLink };

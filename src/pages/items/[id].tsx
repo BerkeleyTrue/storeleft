@@ -1,7 +1,6 @@
 import _ from 'lodash/fp';
-import { Card, CardHeader } from '@mui/material';
-import { Box } from '@mui/system';
 import { GetServerSideProps, InferGetStaticPropsType, NextPage } from 'next';
+import { Heading, Box } from '@chakra-ui/react';
 
 import { AppHead } from '../../components/AppHead';
 import { ViewItem } from '../../components/Items/View';
@@ -31,9 +30,7 @@ const ItemView: NextPage<
       <AppHead subTitle={`${itemId}`} />
       <Layout>
         <Box mb='1em'>
-          <Card>
-            <CardHeader title={`Item: ${itemId}`} />
-          </Card>
+            <Heading>Item: {itemId}</Heading>
         </Box>
         <ViewItem itemId={itemId} />
       </Layout>

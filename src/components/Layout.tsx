@@ -1,47 +1,57 @@
 import { PropsWithChildren } from 'react';
 import { useBoolean } from '@chakra-ui/hooks';
-import { AppBar, IconButton, Stack, Toolbar } from '@mui/material';
-import { Box } from '@mui/system';
-import { Menu } from '@mui/icons-material';
-import { grey } from '@mui/material/colors';
+import { Flex, Box, useBreakpointValue } from '@chakra-ui/react';
 
 import { AppDrawer } from './Drawer';
-import { MainLink } from './Links';
+import { AppBar } from './AppBar';
+
+interface Variant {
+  navigation: 'drawer' | 'sidebar';
+  showButton: boolean;
+}
+
+const headerSize = 12;
+const smVariant: Variant = { navigation: 'drawer', showButton: true };
+const mdVariant: Variant = { navigation: 'sidebar', showButton: false };
 
 export const Layout = ({ children }: PropsWithChildren<{}>) => {
-  const [isOpen, setOpen] = useBoolean(false);
+  const [isSidebarOpen, setSidebar] = useBoolean(false);
+  const variants = useBreakpointValue<Variant>({ base: smVariant, md: mdVariant }) || smVariant;
+
   return (
-    <Box width='100vw' height='100vh'>
-      <AppBar>
-        <Toolbar>
-          <IconButton
-            edge='start'
-            color='inherit'
-            aria-label='open drawer'
-            onClick={setOpen.toggle}
-            sx={{
-              marginRight: '36px',
-              ...(isOpen && { display: 'none' }),
-            }}
-          >
-            <Menu />
-          </IconButton>
-          <MainLink href='/' color={grey[50]}>
-            StoreLeft
-          </MainLink>
-        </Toolbar>
-      </AppBar>
+    <Flex width='100vw' height='100vh'>
+
       <AppDrawer
-        isOpen={isOpen}
-        onMenuClick={setOpen.toggle}
-        onClose={setOpen.off}
+        isOpen={isSidebarOpen}
+        onMenuClick={setSidebar.toggle}
+        onClose={setSidebar.off}
       />
-      <Toolbar />
-      <Stack height='100%' width='100vw' overflow-x='hidden'>
-        <Box flexGrow='1' px='1em' mt='2em'>
-          {children}
-        </Box>
-      </Stack>
-    </Box>
+
+      <Flex
+        flexGrow={1}
+        h="100%"
+        maxH="100vh"
+        w="100%"
+        flexDir="column"
+      >
+        <AppBar
+          h={headerSize}
+          showButton={variants.showButton}
+          onButtonClick={setSidebar.toggle}
+        />
+
+        <Flex
+          h={`calc(100% - var(--chakra-sizes-${headerSize}))`}
+          w="100%"
+          px="4"
+          overflowX="hidden"
+          overflowY="auto"
+        >
+          <Box mx="auto" w="100%" maxW="container.xl">
+            {children}
+          </Box>
+        </Flex>
+      </Flex>
+    </Flex>
   );
 };

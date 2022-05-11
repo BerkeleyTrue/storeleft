@@ -4,12 +4,12 @@ import {
   List,
   Drawer,
   IconButton,
-  Toolbar,
   ListItem,
-  ListItemButton,
-} from '@mui/material';
-import { Menu } from '@mui/icons-material';
-import { MainLink } from './Links';
+  DrawerHeader,
+} from '@chakra-ui/react';
+import { HamburgerIcon } from '@chakra-ui/icons';
+
+import { AppLink } from './Links';
 
 interface Props {
   isOpen: boolean;
@@ -48,8 +48,8 @@ const secondary = [
 ];
 export function AppDrawer({ isOpen, onMenuClick, onClose }: Props) {
   return (
-    <Drawer open={isOpen} onClose={onClose}>
-      <Toolbar
+    <Drawer isOpen={isOpen} onClose={onClose as () => void}>
+      <DrawerHeader
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -57,27 +57,23 @@ export function AppDrawer({ isOpen, onMenuClick, onClose }: Props) {
           px: [1],
         }}
       >
-        <IconButton onClick={onMenuClick}>
-          <Menu />
+        <IconButton onClick={onMenuClick} aria-label='menu button'>
+          <HamburgerIcon />
         </IconButton>
-      </Toolbar>
+      </DrawerHeader>
       <Divider />
-      <List component='nav'>
+      <List>
         <>
           {mainNav.map(({ name, href }) => (
-            <MainLink key={name} href={href}>
-              <ListItemButton>
-                <ListItem>{name}</ListItem>
-              </ListItemButton>
-            </MainLink>
+            <AppLink key={name} href={href}>
+              <ListItem>{name}</ListItem>
+            </AppLink>
           ))}
           <Divider sx={{ my: 1 }} />
           {secondary.map(({ name, href }) => (
-            <MainLink key={name} href={href}>
-              <ListItemButton>
-                <ListItem key={name}>{name}</ListItem>
-              </ListItemButton>
-            </MainLink>
+            <AppLink key={name} href={href}>
+              <ListItem key={name}>{name}</ListItem>
+            </AppLink>
           ))}
         </>
       </List>

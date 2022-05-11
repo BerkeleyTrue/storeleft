@@ -1,13 +1,11 @@
 import {
-  Grid,
+  SimpleGrid,
+  Box,
   Stack,
-  Typography,
+  Flex,
   Button,
-  Card,
-  CardHeader,
-  CardContent,
-  CardActions,
-} from '@mui/material';
+  Heading,
+} from '@chakra-ui/react';
 
 interface Props {
   itemId: string;
@@ -15,12 +13,12 @@ interface Props {
 
 export const ViewItem = ({}: Props) => {
   return (
-    <Stack mb='8em'>
-      <Grid container mb='2em'>
-        <Grid item xs={12} md={3}>
-          <Typography variant='h4'>View</Typography>
-        </Grid>
-        <Grid item xs={12} md={9}>
+    <Flex mb='8em'>
+      <SimpleGrid mb='2em'>
+        <Box>
+          <Heading variant='h4'>View</Heading>
+        </Box>
+        <Box>
           <Stack direction='row' spacing={2}>
             <Button variant='contained' color='success'>
               Save
@@ -29,8 +27,8 @@ export const ViewItem = ({}: Props) => {
               Delete
             </Button>
           </Stack>
-        </Grid>
-        <Grid item xs={12}>
+        </Box>
+        <Box>
           <Stack direction='row' spacing={2}>
             <Button variant='outlined' color='info'>
               Duplicate
@@ -39,24 +37,13 @@ export const ViewItem = ({}: Props) => {
               Add Another
             </Button>
           </Stack>
-        </Grid>
-      </Grid>
-      <Grid container>
-        <Grid item xs={12} lg={6} xl={14} mb='2em'>
-          <Card>
-            <CardHeader title='Group' />
-            <CardContent>
-              <CardActions>
-                <form>
-                  <Grid container>
-                    <Grid item xs={12} sm={6} xl={4}>Fields</Grid>
-                  </Grid>
-                </form>
-              </CardActions>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    </Stack>
+        </Box>
+      </SimpleGrid>
+      <SimpleGrid mb='2em'>
+        <Box mb='2em'>
+          FOo
+        </Box>
+      </SimpleGrid>
+    </Flex>
   );
 };

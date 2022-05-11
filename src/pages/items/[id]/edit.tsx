@@ -1,5 +1,4 @@
-import { Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import { Heading, Box } from '@chakra-ui/react';
 
 import { AppHead } from '../../../components/AppHead';
 import { Layout } from '../../../components/Layout';
@@ -10,7 +9,7 @@ const EditItem = () => {
       <AppHead subTitle={`Editing...`} />
       <Layout>
         <Box height='4em'>
-          <Typography>Editing...</Typography>
+          <Heading>Editing...</Heading>
         </Box>
       </Layout>
     </>

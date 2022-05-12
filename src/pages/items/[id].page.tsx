@@ -1,10 +1,12 @@
 import _ from 'lodash/fp';
-import { GetServerSideProps, InferGetStaticPropsType, NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import { Heading, Box } from '@chakra-ui/react';
 
 import { ViewItem } from './View/View';
 import { AppHead } from '../../components/AppHead';
 import { useGet } from '../../lib/pouchdb/useGet';
+import { TBaseSchema } from '../../model/model';
+import { useModel } from '../../model/use-model';
 
 interface Props {
   itemId: string;
@@ -31,7 +33,8 @@ const ItemView: NextPage<Props> = ({ itemId }) => {
     return <NotFound />;
   }
 
-  const getRes = useGet({ query: { docId: itemId } });
+  const model = useModel();
+  const getRes = useGet<typeof model & TBaseSchema>({ query: { docId: itemId } });
 
   if (getRes.error) {
     throw getRes.error;

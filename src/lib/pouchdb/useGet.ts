@@ -8,11 +8,11 @@ export interface UseGetOptions {
   query: O.Merge<PouchDB.Core.GetOptions, { docId: string }>;
 }
 
-export const useGet = ({ query: { docId, ...rest } }: UseGetOptions) => {
+export const useGet = <Model>({ query: { docId, ...rest } }: UseGetOptions) => {
   const { db } = usePouchDbContext();
 
   const fetcher = useCallback(() => {
-    return db.get(docId, { ...rest });
+    return db.get<Model>(docId, { ...rest });
   }, [db]);
 
   return useSWR(['get', docId], fetcher);

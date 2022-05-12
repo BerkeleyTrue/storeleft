@@ -4,11 +4,13 @@ import { z, ZodTypeAny } from 'zod';
 
 import { DataField, StoreLeftDataTypes, StoreleftConfig } from '../types';
 
-const baseModel = {
+const BaseSchema = z.object({
   name: z.string(),
   _id: z.string(),
   location: z.string(),
-};
+});
+
+export type TBaseSchema = z.infer<typeof BaseSchema>
 
 const libraryStatus = z.object({
   status: z.boolean(),
@@ -39,7 +41,7 @@ export const dataFieldToNameZodTuble = ({
 }: DataField): [string, ZodTypeAny] => [name, getZodFromType(type)];
 
 export const generateModel = (config: StoreleftConfig) => {
-  const userModel = R.pipe(
+  const UserSchema = R.pipe(
     config,
     R.prop('dataDefinition'),
     R.map(R.prop('fields')),
@@ -49,5 +51,5 @@ export const generateModel = (config: StoreleftConfig) => {
     (userDef: Record<string, ZodTypeAny>) => z.object(userDef)
   );
 
-  return userModel.extend(baseModel);
+  return UserSchema.merge(BaseSchema);
 };

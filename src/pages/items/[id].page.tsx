@@ -5,7 +5,7 @@ import { Heading, Box } from '@chakra-ui/react';
 import { ViewItem } from './View/View';
 import { AppHead } from '../../components/AppHead';
 import { useGet } from '../../lib/pouchdb/useGet';
-import { TBaseSchema } from '../../model/model';
+import { BaseSchema, TBaseSchema } from '../../model/model';
 import { useModel } from '../../model/use-model';
 
 interface Props {
@@ -29,30 +29,36 @@ const NotFound = () => {
 };
 
 const ItemView: NextPage<Props> = ({ itemId }) => {
-  if (!itemId) {
+  const model = useModel();
+  const getRes = useGet<typeof model & TBaseSchema>({
+    query: { docId: itemId },
+  });
+
+  const itemParse = model
+    ? model.safeParse(getRes.data)
+    : BaseSchema.safeParse(getRes.data);
+
+  if (!itemId || !getRes.data) {
     return <NotFound />;
   }
-
-  const model = useModel();
-  const getRes = useGet<typeof model & TBaseSchema>({ query: { docId: itemId } });
 
   if (getRes.error) {
     throw getRes.error;
   }
 
-  if (!getRes.data) {
-    return <NotFound />;
+  if (!itemParse.success) {
+    throw itemParse.error;
   }
 
-  const item = getRes.data;
+  const item = itemParse.data;
 
   return (
     <>
       <AppHead subTitle={`${itemId}`} />
       <Box mb='1em'>
-        <Heading>Item: {item.name}</Heading>
+        <Heading>Item: {item.name || itemId || 'N/A'}</Heading>
       </Box>
-      <ViewItem itemId={itemId} />
+      <ViewItem item={item} />
     </>
   );
 };

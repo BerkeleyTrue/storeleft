@@ -6,12 +6,15 @@ import {
   Button,
   Heading,
 } from '@chakra-ui/react';
+import { O } from 'ts-toolbelt';
+
+import { TBaseSchema } from '../../../model/model';
 
 interface Props {
-  itemId: string;
+  item: Partial<TBaseSchema>;
 }
 
-export const ViewItem = ({}: Props) => {
+export const ViewItem = ({ item }: Props) => {
   return (
     <Flex mb='8em'>
       <SimpleGrid mb='2em'>

@@ -2,6 +2,7 @@
 extends:
   - next/core-web-vitals
   - plugin:import/recommended
+  - plugin:react-hooks/recommended
 plugins:
   - import
 settings:

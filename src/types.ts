@@ -1,7 +1,6 @@
 export type StoreLeftLibraryStatus = 'string';
 export type StoreLeftPath = 'string';
-export type StoreLeftLastModified = 'date';
-export type StoreLeftLastDate = 'date';
+export type StoreLeftUpdatedAt = 'date';
 export type StoreLeftList = 'array';
 
 export type StoreLeftDataTypes =
@@ -11,8 +10,7 @@ export type StoreLeftDataTypes =
   | StoreLeftList
   | StoreLeftPath
   | StoreLeftLibraryStatus
-  | StoreLeftLastModified
-  | StoreLeftLastDate;
+  | StoreLeftUpdatedAt;
 
 export interface SubDataField {
   name: string;
@@ -24,6 +22,7 @@ export interface DataField {
   displayName: string;
   type: StoreLeftDataTypes;
   disabled: boolean;
+  isRequired: boolean;
   showInTrue: boolean;
   hideInList: boolean;
   size: number;

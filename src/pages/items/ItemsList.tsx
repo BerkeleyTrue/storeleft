@@ -28,7 +28,7 @@ const createFieldValueAccessor: AccessorFactory = (field) => (row) =>
 const formatDate = (date: string) => dayjs(date).format('YYYY/MM/DD HH:MM');
 
 const accessorFactoryMap: { [key: string]: AccessorFactory } = {
-  libraryStyleStatus: (field) =>
+  libraryStatus: (field) =>
     _.flow(createFieldValueAccessor(field), (isCheckedIn) =>
       isCheckedIn ? 'Checked In' : 'Checked Out'
     ),

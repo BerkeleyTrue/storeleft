@@ -1,3 +1,7 @@
+import * as R from 'remeda';
+import {
+  chakra,
+} from "@chakra-ui/system"
 import {
   SimpleGrid,
   Box,
@@ -11,10 +15,12 @@ import {
   FormLabel,
   Input,
 } from '@chakra-ui/react';
-import * as R from 'remeda';
+import { useFormik } from 'formik';
 
 import { TBaseSchema } from '../../../model/model';
 import { useConfig } from '../../../services/config/use-config';
+
+const Form = chakra('form');
 
 interface Props {
   item: Partial<TBaseSchema>;
@@ -32,6 +38,13 @@ export const ItemView = ({ item }: Props) => {
     (x) => x || { dataDefinition: [] },
     R.prop('dataDefinition')
   );
+
+  const formik = useFormik({
+    initialValues: item,
+    onSubmit: (values) => {
+      console.log('values: ', values);
+    }
+  });
 
   return (
     <VStack mb='8em' alignItems='stretch'>
@@ -60,12 +73,13 @@ export const ItemView = ({ item }: Props) => {
           </Stack>
         </Box>
       </SimpleGrid>
-      <Box
+      <Form
         as='form'
         mb='2em'
         w='100%'
         mx='auto'
         sx={{ columnCount: { sm: 1, xl: 2 }, columnGap: '8', rowGap: '4' }}
+        onSubmit={formik.handleSubmit}
       >
         {dataFields.map(({ displayName, fields }) => (
           <Box
@@ -116,6 +130,8 @@ export const ItemView = ({ item }: Props) => {
                       w='full'
                       disabled={disabled}
                       rounded='md'
+                      onChange={formik.handleChange}
+                      value={(formik.values as any)[name]}
                     />
                   )}
                   {type === 'path' && (
@@ -137,7 +153,7 @@ export const ItemView = ({ item }: Props) => {
             </Stack>
           </Box>
         ))}
-      </Box>
+      </Form>
     </VStack>
   );
 };

@@ -17,8 +17,10 @@ import {
 } from '@chakra-ui/react';
 import { useFormik } from 'formik';
 
+import { PathInput } from './PathInput';
 import { TBaseSchema } from '../../../model/model';
 import { useConfig } from '../../../services/config/use-config';
+import dayjs from 'dayjs';
 
 const Form = chakra('form');
 
@@ -92,6 +94,7 @@ export const ItemView = ({ item }: Props) => {
             bg='gray.700'
             shadow='md'
             rounded='md'
+            key={displayName}
           >
             <Flex justifyContent='flex-start' alignItems='center'>
               <Box
@@ -109,7 +112,7 @@ export const ItemView = ({ item }: Props) => {
             </Flex>
             <Stack px={4} py={5} spacing={6} p={{ sm: 6 }}>
               {fields.map(({ displayName, type, name, disabled }) => (
-                <FormControl as={GridItem} colSpan={[6, 3]}>
+                <FormControl as={GridItem} colSpan={[6, 3]} key={name}>
                   <FormLabel
                     htmlFor={name}
                     fontSize='sm'
@@ -123,29 +126,39 @@ export const ItemView = ({ item }: Props) => {
                       type={type}
                       name={name}
                       id={name}
-                      mt={1}
+                      disabled={disabled}
+                      onChange={formik.handleChange}
+                      value={(formik.values as any)[name]}
                       focusBorderColor='brand.400'
+                      mt='1'
+                      rounded='md'
                       shadow='sm'
                       size='sm'
                       w='full'
-                      disabled={disabled}
+                    />
+                  )}
+                  {type === 'updatedAt' && (
+                    <Input
+                      type='text'
+                      name={name}
+                      id={name}
+                      disabled={true}
+                      value={dayjs((formik.values as any)[name]).format('YYYY/MM/DD-HH:MM')}
+                      focusBorderColor='brand.400'
+                      mt='1'
                       rounded='md'
-                      onChange={formik.handleChange}
-                      value={(formik.values as any)[name]}
+                      shadow='sm'
+                      size='sm'
+                      w='full'
                     />
                   )}
                   {type === 'path' && (
-                    <Input
+                    <PathInput
                       type={type}
                       name={name}
-                      id={name}
-                      mt={1}
-                      focusBorderColor='brand.400'
-                      shadow='sm'
-                      size='sm'
-                      w='full'
                       disabled={disabled}
-                      rounded='md'
+                      onChange={formik.handleChange}
+                      value={(formik.values as any)[name]}
                     />
                   )}
                 </FormControl>

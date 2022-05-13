@@ -5,18 +5,36 @@ import {
   Flex,
   Button,
   Heading,
+  VStack,
+  FormControl,
+  GridItem,
+  FormLabel,
+  Input,
 } from '@chakra-ui/react';
-import { O } from 'ts-toolbelt';
+import * as R from 'remeda';
 
 import { TBaseSchema } from '../../../model/model';
+import { useConfig } from '../../../services/config/use-config';
 
 interface Props {
   item: Partial<TBaseSchema>;
 }
 
-export const ViewItem = ({ item }: Props) => {
+export const ItemView = ({ item }: Props) => {
+  const configRes = useConfig();
+
+  if (configRes.error) {
+    throw configRes.error;
+  }
+
+  const dataFields = R.pipe(
+    configRes.config,
+    (x) => x || { dataDefinition: [] },
+    R.prop('dataDefinition')
+  );
+
   return (
-    <Flex mb='8em'>
+    <VStack mb='8em' alignItems='stretch'>
       <SimpleGrid mb='2em'>
         <Box>
           <Heading variant='h4'>View</Heading>
@@ -42,11 +60,84 @@ export const ViewItem = ({ item }: Props) => {
           </Stack>
         </Box>
       </SimpleGrid>
-      <SimpleGrid mb='2em'>
-        <Box mb='2em'>
-          FOo
-        </Box>
-      </SimpleGrid>
-    </Flex>
+      <Box
+        as='form'
+        mb='2em'
+        w='100%'
+        mx='auto'
+        sx={{ columnCount: { sm: 1, xl: 2 }, columnGap: '8', rowGap: '4' }}
+      >
+        {dataFields.map(({ displayName, fields }) => (
+          <Box
+            w='full'
+            maxW='2xl'
+            mx='auto'
+            mb='10'
+            px={4}
+            py={3}
+            bg='gray.700'
+            shadow='md'
+            rounded='md'
+          >
+            <Flex justifyContent='flex-start' alignItems='center'>
+              <Box
+                as='span'
+                bg='brand.300'
+                color='brand.900'
+                px={3}
+                py={1}
+                rounded='full'
+                textTransform='uppercase'
+                fontSize='xs'
+              >
+                {displayName}
+              </Box>
+            </Flex>
+            <Stack px={4} py={5} spacing={6} p={{ sm: 6 }}>
+              {fields.map(({ displayName, type, name, disabled }) => (
+                <FormControl as={GridItem} colSpan={[6, 3]}>
+                  <FormLabel
+                    htmlFor={name}
+                    fontSize='sm'
+                    fontWeight='md'
+                    color='gray.50'
+                  >
+                    {displayName}
+                  </FormLabel>
+                  {type === 'string' && (
+                    <Input
+                      type={type}
+                      name={name}
+                      id={name}
+                      mt={1}
+                      focusBorderColor='brand.400'
+                      shadow='sm'
+                      size='sm'
+                      w='full'
+                      disabled={disabled}
+                      rounded='md'
+                    />
+                  )}
+                  {type === 'path' && (
+                    <Input
+                      type={type}
+                      name={name}
+                      id={name}
+                      mt={1}
+                      focusBorderColor='brand.400'
+                      shadow='sm'
+                      size='sm'
+                      w='full'
+                      disabled={disabled}
+                      rounded='md'
+                    />
+                  )}
+                </FormControl>
+              ))}
+            </Stack>
+          </Box>
+        ))}
+      </Box>
+    </VStack>
   );
 };

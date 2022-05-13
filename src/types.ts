@@ -3,7 +3,8 @@ export type StoreLeftPath = 'path';
 export type StoreLeftUpdatedAt = 'updatedAt';
 export type StoreLeftList = 'list';
 
-export type StoreLeftPrimitiveTypes = 'string' | 'boolean' | 'date';
+export const storeLeftPrimitiveTypes = ['string', 'boolean', 'date'] as const;
+export type StoreLeftPrimitiveTypes = (typeof storeLeftPrimitiveTypes)[number]
 
 export type StoreLeftDataTypes =
   | StoreLeftPrimitiveTypes

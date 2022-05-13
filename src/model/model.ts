@@ -7,6 +7,7 @@ import {
   StoreLeftDataTypes,
   StoreleftConfig,
   StoreLeftPrimitiveTypes,
+  storeLeftPrimitiveTypes,
 } from '../types';
 
 const zDateFactory = z.preprocess((arg) => {
@@ -36,7 +37,8 @@ const dataFieldTypeToZodMap: IDataFieldTypeToZodMap = {
 
 const isPrimitiveType = (
   fieldType: StoreLeftDataTypes
-): fieldType is StoreLeftPrimitiveTypes => !!dataFieldTypeToZodMap[fieldType];
+): fieldType is StoreLeftPrimitiveTypes =>
+  (storeLeftPrimitiveTypes as ReadonlyArray<string>).includes(fieldType);
 
 export const getZodFromType = (fieldType: StoreLeftDataTypes) => {
   let zodTypeFactory = dataFieldTypeToZodMap[fieldType];
@@ -44,12 +46,15 @@ export const getZodFromType = (fieldType: StoreLeftDataTypes) => {
   if (!zodTypeFactory && isPrimitiveType(fieldType)) {
     zodTypeFactory = z[fieldType];
   }
+
   if (!zodTypeFactory) {
     zodTypeFactory = z.undefined;
   }
 
   if (zodTypeFactory === z.undefined) {
-    console.log(`Expected type for ${fieldType}: but found none, using undefined`);
+    console.log(
+      `Expected type for ${fieldType}: but found none, using undefined`
+    );
   }
 
   return zodTypeFactory();

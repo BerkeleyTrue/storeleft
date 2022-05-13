@@ -4,7 +4,7 @@ import { z, ZodTypeAny } from 'zod';
 
 import { DataField, StoreLeftDataTypes, StoreleftConfig } from '../types';
 
-const BaseSchema = z.object({
+export const BaseSchema = z.object({
   name: z.string(),
   _id: z.string(),
   location: z.string(),

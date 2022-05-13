@@ -1,12 +1,12 @@
-export type StoreLeftLibraryStatus = 'string';
-export type StoreLeftPath = 'string';
-export type StoreLeftUpdatedAt = 'date';
-export type StoreLeftList = 'array';
+export type StoreLeftLibraryStatus = 'libraryStatus';
+export type StoreLeftPath = 'path';
+export type StoreLeftUpdatedAt = 'updatedAt';
+export type StoreLeftList = 'list';
+
+export type StoreLeftPrimitiveTypes = 'string' | 'boolean' | 'date';
 
 export type StoreLeftDataTypes =
-  | 'string'
-  | 'boolean'
-  | 'date'
+  | StoreLeftPrimitiveTypes
   | StoreLeftList
   | StoreLeftPath
   | StoreLeftLibraryStatus
@@ -18,22 +18,47 @@ export interface SubDataField {
 }
 
 export interface DataField {
+  /**
+   * data field name
+   */
   name: string;
+  /**
+   * name on forms
+   */
   displayName: string;
+  /**
+   * Date type - one of StoreLeftDataTypes
+   */
   type: StoreLeftDataTypes;
+  /**
+   * Make field non-editable
+   */
   disabled: boolean;
+  /**
+   * Is field required?
+   */
   isRequired: boolean;
+  /**
+   * Sub fields for certain types like list
+   */
+  dataFields: SubDataField[];
+
   showInTrue: boolean;
   hideInList: boolean;
   size: number;
   prefixes: { [key: string]: string };
-  dataFields: SubDataField[];
 }
 
 export interface DataDefinition {
+  /**
+   * The group name in forms
+   */
   displayName: string;
-  color: string;
+  /**
+   * Fields for this data group
+   */
   fields: DataField[];
+  color: string;
 }
 
 export interface StoreleftConfig {

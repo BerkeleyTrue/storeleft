@@ -2,10 +2,15 @@ import _ from 'lodash/fp';
 import * as R from 'remeda';
 import { z, ZodTypeAny } from 'zod';
 
-import { DataField, StoreLeftDataTypes, StoreleftConfig } from '../types';
+import {
+  DataField,
+  StoreLeftDataTypes,
+  StoreleftConfig,
+  StoreLeftPrimitiveTypes,
+} from '../types';
 
 const zDateFactory = z.preprocess((arg) => {
-  if (typeof arg == "string" || arg instanceof Date) return new Date(arg);
+  if (typeof arg == 'string' || arg instanceof Date) return new Date(arg);
 }, z.date());
 
 const libraryStatus = z.object({
@@ -29,11 +34,24 @@ const dataFieldTypeToZodMap: IDataFieldTypeToZodMap = {
   list: () => z.string().array(),
 };
 
-export const getZodFromType = (type: StoreLeftDataTypes) => {
-  const zodTypeFactory = dataFieldTypeToZodMap[type] || z[type] || z.undefined;
-  if (zodTypeFactory === z.undefined) {
-    console.log(`Expected type for ${type}: but found none, using undefined`);
+const isPrimitiveType = (
+  fieldType: StoreLeftDataTypes
+): fieldType is StoreLeftPrimitiveTypes => !!dataFieldTypeToZodMap[fieldType];
+
+export const getZodFromType = (fieldType: StoreLeftDataTypes) => {
+  let zodTypeFactory = dataFieldTypeToZodMap[fieldType];
+
+  if (!zodTypeFactory && isPrimitiveType(fieldType)) {
+    zodTypeFactory = z[fieldType];
   }
+  if (!zodTypeFactory) {
+    zodTypeFactory = z.undefined;
+  }
+
+  if (zodTypeFactory === z.undefined) {
+    console.log(`Expected type for ${fieldType}: but found none, using undefined`);
+  }
+
   return zodTypeFactory();
 };
 
@@ -47,7 +65,9 @@ export const modDatafieldOptional = (
   zType: ZodTypeAny
 ) => (isRequired ? zType : zType.optional());
 
-export const forkJoinDataField = (dataField: DataField): [string, ZodTypeAny] => {
+export const forkJoinDataField = (
+  dataField: DataField
+): [string, ZodTypeAny] => {
   const [key, zType] = dataFieldToNameZodTuble(dataField);
 
   return [key, modDatafieldOptional(dataField, zType)];

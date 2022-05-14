@@ -15,7 +15,7 @@ const zDateFactory = z.preprocess((arg) => {
 }, z.date());
 
 const libraryStatus = z.object({
-  status: z.boolean(),
+  status: z.boolean().default(false),
   events: z
     .object({
       checkIn: z.boolean(),

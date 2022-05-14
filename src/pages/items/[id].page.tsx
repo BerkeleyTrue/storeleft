@@ -5,7 +5,7 @@ import { Heading, Box } from '@chakra-ui/react';
 import { ItemView } from './View/View';
 import { AppHead } from '../../components/AppHead';
 import { useGet } from '../../lib/pouchdb/useGet';
-import { BaseSchema, TBaseSchema } from '../../model/model';
+import { TBaseSchema } from '../../model/model';
 import { useModel } from '../../model/use-model';
 
 interface Props {
@@ -34,9 +34,7 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
     query: { docId: itemId },
   });
 
-  const itemParse = model
-    ? model.safeParse(getRes.data)
-    : BaseSchema.safeParse(getRes.data);
+  const itemParse = model.safeParse(getRes.data);
 
   if (!itemId || !getRes.data) {
     return <NotFound />;

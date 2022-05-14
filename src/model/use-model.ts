@@ -1,16 +1,18 @@
 import _ from 'lodash/fp';
-
-import { useConfig } from '../services/config/use-config';
 import { useMemo } from 'react';
-import { generateModel } from './model';
+
+import { BaseSchema, generateModel } from './model';
+import { useConfig } from '../services/config/use-config';
 
 export const useModel = () => {
   const configRes = useConfig();
   return useMemo(
-    () =>
-      configRes.error || !configRes.data
+    () => {
+      const UserSchema = configRes.error || !configRes.data
         ? undefined
-        : generateModel(configRes.data),
+        : generateModel(configRes.data);
+      return UserSchema || BaseSchema;
+    },
     [configRes.data, configRes.error]
   );
 };

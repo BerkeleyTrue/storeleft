@@ -1,4 +1,5 @@
 import * as R from 'remeda';
+import dayjs from 'dayjs';
 import { chakra } from '@chakra-ui/system';
 import {
   Box,
@@ -13,14 +14,16 @@ import {
   ButtonGroup,
 } from '@chakra-ui/react';
 import { FormikProvider, useFormik } from 'formik';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 import { PathInput } from './PathInput';
-import { TBaseSchema } from '../../../model/model';
-import { useConfig } from '../../../services/config/use-config';
-import dayjs from 'dayjs';
 import { DatePicker } from './date';
 import { ListField } from './List';
 import { LibraryStatus } from './LibraryStatus';
+
+import { TBaseSchema } from '../../../model/model';
+import { useConfig } from '../../../services/config/use-config';
+import { useModel } from '../../../model/use-model';
 
 const Form = chakra('form');
 
@@ -30,6 +33,7 @@ interface Props {
 
 export const ItemView = ({ item }: Props) => {
   const configRes = useConfig();
+  const model = useModel();
 
   if (configRes.error) {
     throw configRes.error;
@@ -43,6 +47,7 @@ export const ItemView = ({ item }: Props) => {
 
   const formik = useFormik({
     initialValues: item,
+    validationSchema: toFormikValidationSchema(model),
     onSubmit: (values) => {
       console.log('values: ', values);
     },

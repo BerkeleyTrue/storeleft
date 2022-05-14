@@ -12,13 +12,15 @@ export const PouchSync = ({ children }: PropsWithChildren<{}>) => {
     const remoteUrl = `${window.location.origin}/api/db/storedown`;
     toast({
       title: 'Syncing db...',
-      variant: 'info',
+      status: 'info',
+      variant: 'solid',
     });
 
     db.replicate.from(remoteUrl).on('complete', () => {
       toast({
         title: 'initial replicate complete.',
-        variant: 'success',
+        status: 'success',
+        variant: 'solid',
       });
     });
   }, [db]);

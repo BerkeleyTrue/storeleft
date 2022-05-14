@@ -1,5 +1,4 @@
 import * as R from 'remeda';
-import dayjs from 'dayjs';
 import React, { useCallback, useRef } from 'react';
 
 import {
@@ -18,9 +17,7 @@ import { useField } from 'formik';
 
 import { CalendarPanel } from './CalPanel';
 import { OnDateSelected } from './types';
-
-const formatDate = (date: string | Date): string =>
-  dayjs(date).format('YYYY/MM/DD');
+import { formatDate } from '../utils';
 
 export interface Props {
   id?: string;
@@ -75,6 +72,7 @@ export const DatePicker = ({
       <PopoverTrigger>
         <Input
           id={id}
+          type='text'
           isDisabled={disabled}
           onClick={setPopover.toggle}
           name={name}

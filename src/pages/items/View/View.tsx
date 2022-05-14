@@ -20,6 +20,7 @@ import { useConfig } from '../../../services/config/use-config';
 import dayjs from 'dayjs';
 import { DatePicker } from './date';
 import { ListField } from './List';
+import { LibraryStatus } from './LibraryStatus';
 
 const Form = chakra('form');
 
@@ -167,6 +168,9 @@ export const ItemView = ({ item }: Props) => {
                         name={name}
                         list={(formik.values as any)[name]}
                       />
+                    )}
+                    { type === 'libraryStatus' && (
+                      <LibraryStatus name={name} />
                     )}
                   </FormControl>
                 ))}

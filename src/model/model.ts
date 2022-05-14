@@ -14,16 +14,22 @@ const zDateFactory = z.preprocess((arg) => {
   if (typeof arg == 'string' || arg instanceof Date) return new Date(arg);
 }, z.date());
 
-const libraryStatus = z.object({
-  status: z.boolean().default(false),
-  events: z
+const libraryStatusEvents = z
     .object({
       checkIn: z.boolean(),
       user: z.string(),
+      date: z.union([z.date(), z.string()]),
     })
     .array()
-    .optional(),
+
+export type TLibraryStatusEvents = z.infer<typeof libraryStatusEvents>;
+
+const libraryStatus = z.object({
+  status: z.boolean().default(false),
+  events: libraryStatusEvents.optional(),
 });
+
+export type TLibraryStatus = z.infer<typeof libraryStatus>;
 
 interface IDataFieldTypeToZodMap {
   [key: string]: () => ZodTypeAny;
@@ -36,7 +42,7 @@ const dataFieldTypeToZodMap: IDataFieldTypeToZodMap = {
 };
 
 const isPrimitiveType = (
-  fieldType: StoreLeftDataTypes
+  fieldType: StoreLeftDataTypes,
 ): fieldType is StoreLeftPrimitiveTypes =>
   (storeLeftPrimitiveTypes as ReadonlyArray<string>).includes(fieldType);
 
@@ -53,7 +59,7 @@ export const getZodFromType = (fieldType: StoreLeftDataTypes) => {
 
   if (zodTypeFactory === z.undefined) {
     console.log(
-      `Expected type for ${fieldType}: but found none, using undefined`
+      `Expected type for ${fieldType}: but found none, using undefined`,
     );
   }
 
@@ -67,11 +73,11 @@ export const dataFieldToNameZodTuble = ({
 
 export const modDatafieldOptional = (
   { isRequired }: DataField,
-  zType: ZodTypeAny
+  zType: ZodTypeAny,
 ) => (isRequired ? zType : zType.optional());
 
 export const forkJoinDataField = (
-  dataField: DataField
+  dataField: DataField,
 ): [string, ZodTypeAny] => {
   const [key, zType] = dataFieldToNameZodTuble(dataField);
 
@@ -93,7 +99,7 @@ export const generateModel = (config: StoreleftConfig) => {
     R.flatten(),
     R.map(forkJoinDataField),
     R.fromPairs,
-    (userDef: Record<string, ZodTypeAny>) => z.object(userDef)
+    (userDef: Record<string, ZodTypeAny>) => z.object(userDef),
   );
 
   return UserSchema.merge(BaseSchema);

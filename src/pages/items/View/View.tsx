@@ -1,7 +1,5 @@
 import * as R from 'remeda';
-import {
-  chakra,
-} from "@chakra-ui/system"
+import { chakra } from '@chakra-ui/system';
 import {
   SimpleGrid,
   Box,
@@ -15,12 +13,13 @@ import {
   FormLabel,
   Input,
 } from '@chakra-ui/react';
-import { useFormik } from 'formik';
+import { FormikProvider, useFormik } from 'formik';
 
 import { PathInput } from './PathInput';
 import { TBaseSchema } from '../../../model/model';
 import { useConfig } from '../../../services/config/use-config';
 import dayjs from 'dayjs';
+import { DatePicker } from './date';
 
 const Form = chakra('form');
 
@@ -45,7 +44,7 @@ export const ItemView = ({ item }: Props) => {
     initialValues: item,
     onSubmit: (values) => {
       console.log('values: ', values);
-    }
+    },
   });
 
   return (
@@ -83,89 +82,96 @@ export const ItemView = ({ item }: Props) => {
         sx={{ columnCount: { sm: 1, xl: 2 }, columnGap: '8', rowGap: '4' }}
         onSubmit={formik.handleSubmit}
       >
-        {dataFields.map(({ displayName, fields }) => (
-          <Box
-            w='full'
-            maxW='2xl'
-            mx='auto'
-            mb='10'
-            px={4}
-            py={3}
-            bg='gray.700'
-            shadow='md'
-            rounded='md'
-            key={displayName}
-          >
-            <Flex justifyContent='flex-start' alignItems='center'>
-              <Box
-                as='span'
-                bg='brand.300'
-                color='brand.900'
-                px={3}
-                py={1}
-                rounded='full'
-                textTransform='uppercase'
-                fontSize='xs'
-              >
-                {displayName}
-              </Box>
-            </Flex>
-            <Stack px={4} py={5} spacing={6} p={{ sm: 6 }}>
-              {fields.map(({ displayName, type, name, disabled }) => (
-                <FormControl as={GridItem} colSpan={[6, 3]} key={name}>
-                  <FormLabel
-                    htmlFor={name}
-                    fontSize='sm'
-                    fontWeight='md'
-                    color='gray.50'
-                  >
-                    {displayName}
-                  </FormLabel>
-                  {type === 'string' && (
-                    <Input
-                      type={type}
-                      name={name}
-                      id={name}
-                      disabled={disabled}
-                      onChange={formik.handleChange}
-                      value={(formik.values as any)[name]}
-                      focusBorderColor='brand.400'
-                      mt='1'
-                      rounded='md'
-                      shadow='sm'
-                      size='sm'
-                      w='full'
-                    />
-                  )}
-                  {type === 'updatedAt' && (
-                    <Input
-                      type='text'
-                      name={name}
-                      id={name}
-                      disabled={true}
-                      value={dayjs((formik.values as any)[name]).format('YYYY/MM/DD-HH:MM')}
-                      focusBorderColor='brand.400'
-                      mt='1'
-                      rounded='md'
-                      shadow='sm'
-                      size='sm'
-                      w='full'
-                    />
-                  )}
-                  {type === 'path' && (
-                    <PathInput
-                      type={type}
-                      name={name}
-                      disabled={disabled}
-                      onChange={formik.handleChange}
-                      value={(formik.values as any)[name]}
-                    />
-                  )}
-                </FormControl>
-              ))}
-            </Stack>
-          </Box>
-        ))}
+        <FormikProvider value={formik}>
+          {dataFields.map(({ displayName, fields }) => (
+            <Box
+              w='full'
+              maxW='2xl'
+              mx='auto'
+              mb='10'
+              px={4}
+              py={3}
+              bg='gray.700'
+              shadow='md'
+              rounded='md'
+              key={displayName}
+            >
+              <Flex justifyContent='flex-start' alignItems='center'>
+                <Box
+                  as='span'
+                  bg='brand.300'
+                  color='brand.900'
+                  px={3}
+                  py={1}
+                  rounded='full'
+                  textTransform='uppercase'
+                  fontSize='xs'
+                >
+                  {displayName}
+                </Box>
+              </Flex>
+              <Stack px={4} py={5} spacing={6} p={{ sm: 6 }}>
+                {fields.map(({ displayName, type, name, disabled }) => (
+                  <FormControl as={GridItem} colSpan={[6, 3]} key={name}>
+                    <FormLabel
+                      htmlFor={name}
+                      fontSize='sm'
+                      fontWeight='md'
+                      color='gray.50'
+                    >
+                      {displayName}
+                    </FormLabel>
+                    {type === 'string' && (
+                      <Input
+                        type={type}
+                        name={name}
+                        id={name}
+                        disabled={disabled}
+                        onChange={formik.handleChange}
+                        value={(formik.values as any)[name]}
+                        focusBorderColor='brand.400'
+                        mt='1'
+                        rounded='md'
+                        shadow='sm'
+                        size='sm'
+                        w='full'
+                      />
+                    )}
+                    {type === 'updatedAt' && (
+                      <Input
+                        type='text'
+                        name={name}
+                        id={name}
+                        disabled={true}
+                        value={dayjs((formik.values as any)[name]).format(
+                          'YYYY/MM/DD-HH:MM'
+                        )}
+                        focusBorderColor='brand.400'
+                        mt='1'
+                        rounded='md'
+                        shadow='sm'
+                        size='sm'
+                        w='full'
+                      />
+                    )}
+                    {type === 'path' && (
+                      <PathInput
+                        type={type}
+                        name={name}
+                        disabled={disabled}
+                        onChange={formik.handleChange}
+                        value={(formik.values as any)[name]}
+                      />
+                    )}
+                    {type === 'date' && (
+                      <DatePicker disabled={disabled} id={name} name={name} />
+                    )}
+                  </FormControl>
+                ))}
+              </Stack>
+            </Box>
+          ))}
+        </FormikProvider>
       </Form>
     </VStack>
   );

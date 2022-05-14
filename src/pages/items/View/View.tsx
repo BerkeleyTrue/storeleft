@@ -1,12 +1,10 @@
 import * as R from 'remeda';
 import { chakra } from '@chakra-ui/system';
 import {
-  SimpleGrid,
   Box,
   Stack,
   Flex,
   Button,
-  Heading,
   VStack,
   FormControl,
   GridItem,
@@ -21,6 +19,7 @@ import { TBaseSchema } from '../../../model/model';
 import { useConfig } from '../../../services/config/use-config';
 import dayjs from 'dayjs';
 import { DatePicker } from './date';
+import { ListField } from './List';
 
 const Form = chakra('form');
 
@@ -161,6 +160,13 @@ export const ItemView = ({ item }: Props) => {
                     )}
                     {type === 'date' && (
                       <DatePicker disabled={disabled} id={name} name={name} />
+                    )}
+                    {type === 'list' && (
+                      <ListField
+                        disabled={disabled}
+                        name={name}
+                        list={(formik.values as any)[name]}
+                      />
                     )}
                   </FormControl>
                 ))}

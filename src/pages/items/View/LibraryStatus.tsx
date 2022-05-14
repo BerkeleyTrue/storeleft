@@ -1,7 +1,7 @@
 import * as R from 'remeda';
 import { Union } from 'ts-toolbelt';
 import { useCallback } from 'react';
-import { FormLabel, HStack, Input, Switch, VStack } from '@chakra-ui/react';
+import { Box, FormLabel, HStack, Text, Switch, VStack } from '@chakra-ui/react';
 import { useField } from 'formik';
 
 import { formatDate } from './utils';
@@ -15,15 +15,11 @@ interface Props {
 }
 
 export const LibraryStatus = ({ name }: Props) => {
-  const [field, meta, helpers] = useField<TLibraryStatus>(name);
+  const [field, meta, helpers] = useField<TLibraryStatus>(name || '');
 
-  const isCheckedIn = R.pipe(field, R.prop('value'), R.prop('status'));
-  const events = R.pipe(
-    field,
-    R.prop('value'),
-    R.prop('events'),
-    defaultTo<TLibraryStatusEvents>([]),
-  );
+  const isCheckedIn = field?.value?.status || false;
+
+  const events: TLibraryStatusEvents = field?.value?.events || [];
 
   const handleChange = useCallback<OnChange>(({ target: { checked } }) => {
     helpers.setValue({
@@ -37,7 +33,7 @@ export const LibraryStatus = ({ name }: Props) => {
           {
             checkIn: checked,
             date: new Date().toISOString(),
-            user: '',
+            user: 'Anon',
           },
         ]),
       ),
@@ -58,12 +54,11 @@ export const LibraryStatus = ({ name }: Props) => {
           value={undefined}
         />
       </HStack>
-      {events.map(({ date }) => (
-        <Input
-          type='text'
-          disabled
-          value={formatDate(date)}
-        />
+      {events.map(({ date, checkIn, user }) => (
+        <HStack key={formatDate(date)} w='100%' pl='2'>
+          <Text>- {checkIn ? 'In' : 'out'}({user}): </Text>
+          <Text>{formatDate(date)}</Text>
+        </HStack>
       ))}
     </VStack>
   );

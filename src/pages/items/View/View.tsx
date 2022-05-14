@@ -12,6 +12,7 @@ import {
   GridItem,
   FormLabel,
   Input,
+  ButtonGroup,
 } from '@chakra-ui/react';
 import { FormikProvider, useFormik } from 'formik';
 
@@ -37,7 +38,7 @@ export const ItemView = ({ item }: Props) => {
   const dataFields = R.pipe(
     configRes.config,
     (x) => x || { dataDefinition: [] },
-    R.prop('dataDefinition')
+    R.prop('dataDefinition'),
   );
 
   const formik = useFormik({
@@ -49,31 +50,26 @@ export const ItemView = ({ item }: Props) => {
 
   return (
     <VStack mb='8em' alignItems='stretch'>
-      <SimpleGrid mb='2em'>
-        <Box>
-          <Heading variant='h4'>View</Heading>
-        </Box>
-        <Box>
-          <Stack direction='row' spacing={2}>
-            <Button variant='contained' color='success'>
-              Save
-            </Button>
-            <Button variant='contained' color='error'>
-              Delete
-            </Button>
-          </Stack>
-        </Box>
-        <Box>
-          <Stack direction='row' spacing={2}>
-            <Button variant='outlined' color='info'>
-              Duplicate
-            </Button>
-            <Button variant='outlined' color='info'>
-              Add Another
-            </Button>
-          </Stack>
-        </Box>
-      </SimpleGrid>
+      <VStack mb='2em' justify='stretch' align='flex-end' spacing='4'>
+        <ButtonGroup size='md' spacing='2'>
+          <Button
+            variant='solid'
+            colorScheme='green'
+            disabled={!formik.dirty && formik.isValid}
+            onClick={formik.handleSubmit as any}
+          >
+            Save
+          </Button>
+          <Button variant='outline' colorScheme='red'>
+            Delete
+          </Button>
+        </ButtonGroup>
+        <ButtonGroup size='sm' spacing='4' colorScheme='cyan' variant='ghost'>
+          <Button>Duplicate</Button>
+          <Button>Add to Container</Button>
+          <Button onClick={formik.handleReset}>Reset</Button>
+        </ButtonGroup>
+      </VStack>
       <Form
         as='form'
         mb='2em'
@@ -144,7 +140,7 @@ export const ItemView = ({ item }: Props) => {
                         id={name}
                         disabled={true}
                         value={dayjs((formik.values as any)[name]).format(
-                          'YYYY/MM/DD-HH:MM'
+                          'YYYY/MM/DD-HH:MM',
                         )}
                         focusBorderColor='brand.400'
                         mt='1'

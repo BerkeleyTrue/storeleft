@@ -19,15 +19,7 @@ const breakpoints = createBreakpoints({
 });
 
 export const theme: ThemeConfig = extendTheme({
-  components: {
-    Button: {
-      variants: {
-        solid: {
-          bg: 'dark.900',
-        },
-      },
-    },
-  },
+  components: {},
   styles: {
     global: {
       body: {

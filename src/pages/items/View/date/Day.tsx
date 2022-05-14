@@ -1,4 +1,4 @@
-import { Button } from '@chakra-ui/react';
+import { Button, ButtonProps } from '@chakra-ui/react';
 import { DateObj, RenderProps } from 'dayzed';
 
 interface Props {
@@ -22,12 +22,17 @@ const afterStyle = {
 const hoverStyle = {
   bg: 'purple.400',
 };
+
 const selectedStyle = {
   background: 'purple.200',
 };
-const todayStyle = {
-  borderColor: 'blue.400',
+
+const todayStyle: ButtonProps = {
+  borderColor: 'blue.500',
+  boxShadow: 'lg',
+  background: 'blue.400',
 };
+
 export const Day = ({ dateObj, getDateProps }: Props) => {
   const { date, selected, selectable, today } = dateObj;
 

@@ -10,9 +10,8 @@ import {
   PopoverTrigger,
   useOutsideClick,
   Portal,
-  InputProps,
-  ButtonProps,
   PopoverArrow,
+  PopoverContentProps,
 } from '@chakra-ui/react';
 import { useBoolean } from '@chakra-ui/hooks';
 import { useField } from 'formik';
@@ -27,6 +26,10 @@ export interface Props {
   id?: string;
   name?: string;
   disabled?: boolean;
+}
+const popoverStyle: PopoverContentProps = {
+  background: 'blue.500',
+  dropShadow: 'dark-lg'
 }
 
 export const DatePicker = ({
@@ -82,8 +85,8 @@ export const DatePicker = ({
         />
       </PopoverTrigger>
       <Portal>
-        <PopoverContent ref={popOverContentRef} width='100%'>
-          <PopoverArrow />
+        <PopoverContent ref={popOverContentRef} width='100%' {...popoverStyle}>
+          <PopoverArrow  bg={popoverStyle.background}/>
           <PopoverBody>
             <CalendarPanel
               onDateSelected={handleDateSelected}

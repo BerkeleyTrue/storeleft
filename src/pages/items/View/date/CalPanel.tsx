@@ -45,13 +45,12 @@ export const CalendarPanel = ({ onDateSelected, value }: Props) => {
   }
 
   return (
-    <Stack direction={['column', 'column', 'row']}>
+    <Stack direction={['column', 'column', 'row']} border='hidden' py='4' px='1'>
       {calendars.map((calendar) => {
         return (
           <VStack
             key={`${calendar.month}${calendar.year}`}
             height='100%'
-            borderWidth='1px'
             padding='5px 10px'
           >
             <HStack justify='space-between' w='100%'>

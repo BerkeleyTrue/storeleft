@@ -11,7 +11,7 @@ function createDatePickerBtn<P extends Props = Props>(forward: boolean) {
     const arrows: [string, string] = forward ? ['>', '->'] : ['<', '<-'];
 
     const monthBtn = (
-      <Button {...propsFactory({ calendars })} key='month'>
+      <Button {...propsFactory({ calendars })} key='month' variant='outline'>
         {arrows[0]}
       </Button>
     );
@@ -23,6 +23,7 @@ function createDatePickerBtn<P extends Props = Props>(forward: boolean) {
           offset: 12,
         })}
         key='year'
+        variant='outline'
       >
         {arrows[1]}
       </Button>

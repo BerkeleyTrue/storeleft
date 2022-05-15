@@ -2,7 +2,7 @@ import _ from 'lodash/fp';
 import { GetServerSideProps, NextPage } from 'next';
 import { Heading, Box } from '@chakra-ui/react';
 
-import { ItemView } from './View/View';
+import { ViewItem } from './View/Item';
 import { AppHead } from '../../components/AppHead';
 import { useGet } from '../../lib/pouchdb/useGet';
 import { TBaseSchema } from '../../model/model';
@@ -29,7 +29,7 @@ const NotFound = () => {
   return <>Not found</>;
 };
 
-const ItemPage: NextPage<Props> = ({ itemId }) => {
+const ViewItemPage: NextPage<Props> = ({ itemId }) => {
   const model = useModel();
   const getRes = useGet<typeof model & TBaseSchema>({
     query: { docId: itemId },
@@ -59,7 +59,7 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
       <Box mb='1em'>
         <Heading>Item: {item.name || itemId || 'N/A'}</Heading>
       </Box>
-      <ItemView<typeof model & TBaseSchema>
+      <ViewItem<typeof model & TBaseSchema>
         item={item}
         onItemMutate={getRes.mutate}
       />
@@ -67,4 +67,4 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
   );
 };
 
-export default ItemPage;
+export default ViewItemPage;

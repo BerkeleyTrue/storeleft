@@ -38,7 +38,7 @@ interface Props<T> {
   onItemMutate: KeyedMutator<T>;
 }
 
-export const ItemView = <Model extends {}>({ item, onItemMutate }: Props<Model>) => {
+export const ViewItem = <Model extends {}>({ item, onItemMutate }: Props<Model>) => {
   const toast = useToast();
   const configRes = useConfig();
   const model = useModel();

@@ -54,7 +54,12 @@ export const Layout = ({ children }: PropsWithChildren<{}>) => {
           overflowX='hidden'
           overflowY='auto'
         >
-          <Box mx='auto' w='100%' maxW='container.xl'>
+          <Box
+            mx='auto'
+            w='100%'
+            maxW='container.xl'
+            pt={{ base: '4', md: '16' }}
+          >
             {children}
           </Box>
         </Flex>

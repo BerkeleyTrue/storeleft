@@ -13,6 +13,8 @@ import {
   Input,
   ButtonGroup,
   useToast,
+  Badge,
+  Spacer,
 } from '@chakra-ui/react';
 import { FormikProvider, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
@@ -27,7 +29,7 @@ import { useConfig } from '../../../services/config/use-config';
 import { useModel } from '../../../model/use-model';
 import { usePut, usePost } from '../../../lib/pouchdb';
 import { defaultTo } from '../../../lib/remeda/defaultTo';
-import { StoreleftConfig } from '../../../types';
+import { DataDefinition, StoreleftConfig } from '../../../types';
 import { useEffect } from 'react';
 import { KeyedMutator } from 'swr';
 
@@ -38,7 +40,10 @@ interface Props<T> {
   onItemMutate: KeyedMutator<T>;
 }
 
-export const ViewItem = <Model extends {}>({ item, onItemMutate }: Props<Model>) => {
+export const ViewItem = <Model extends {}>({
+  item,
+  onItemMutate,
+}: Props<Model>) => {
   const toast = useToast();
   const configRes = useConfig();
   const model = useModel();
@@ -93,6 +98,8 @@ export const ViewItem = <Model extends {}>({ item, onItemMutate }: Props<Model>)
   if (configRes.error) {
     throw configRes.error;
   }
+
+  const rev = item._rev || (item._id ? 'N/A' : 'NEW');
 
   return (
     <VStack mb='8em' alignItems='stretch'>
@@ -152,6 +159,23 @@ export const ViewItem = <Model extends {}>({ item, onItemMutate }: Props<Model>)
                 >
                   {displayName}
                 </Box>
+                {displayName == 'Main' && (
+                  <>
+                    <Spacer />
+                    <Box
+                      as='span'
+                      bg='brand.300'
+                      color='brand.900'
+                      px={3}
+                      py={1}
+                      rounded='full'
+                      textTransform='uppercase'
+                      fontSize='xs'
+                    >
+                      <Badge>rev: {rev}</Badge>
+                    </Box>
+                  </>
+                )}
               </Flex>
               <Stack px={4} py={5} spacing={6} p={{ sm: 6 }}>
                 {fields.map(({ displayName, type, name, disabled }) => (

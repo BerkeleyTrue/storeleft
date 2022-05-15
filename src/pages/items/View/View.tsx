@@ -12,6 +12,7 @@ import {
   FormLabel,
   Input,
   ButtonGroup,
+  useToast,
 } from '@chakra-ui/react';
 import { FormikProvider, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
@@ -24,6 +25,10 @@ import { LibraryStatus } from './LibraryStatus';
 import { TBaseSchema } from '../../../model/model';
 import { useConfig } from '../../../services/config/use-config';
 import { useModel } from '../../../model/use-model';
+import { usePut, usePost } from '../../../lib/pouchdb';
+import { defaultTo } from '../../../lib/remeda/defaultTo';
+import { StoreleftConfig } from '../../../types';
+import { useEffect } from 'react';
 
 const Form = chakra('form');
 
@@ -32,26 +37,58 @@ interface Props {
 }
 
 export const ItemView = ({ item }: Props) => {
+  const toast = useToast();
   const configRes = useConfig();
   const model = useModel();
-
-  if (configRes.error) {
-    throw configRes.error;
-  }
+  const [putResults, putItem] = usePut<typeof model>();
+  const [postResults, postItem] = usePost<typeof model>();
+  const isUpdating = putResults.isFetching || postResults.isFetching;
 
   const dataFields = R.pipe(
     configRes.config,
-    (x) => x || { dataDefinition: [] },
+    defaultTo<StoreleftConfig>({ dataDefinition: [] }),
     R.prop('dataDefinition'),
   );
 
   const formik = useFormik({
     initialValues: item,
     validationSchema: toFormikValidationSchema(model),
-    onSubmit: (values) => {
-      console.log('values: ', values);
+    onSubmit: (doc) => {
+      let p = Promise.resolve(doc._id ? putResults : postResults);
+      if (doc._id) {
+        p = putItem({ doc });
+      } else {
+        p = postItem({ doc });
+      }
+      p.then((res) => {
+        if (res.error) {
+          console.error(res.error);
+          toast({
+            variant: 'solid',
+            status: 'error',
+            title: 'Opps! Something went wrong',
+            description: res.error.message,
+          });
+        } else if (res.data) {
+          toast({
+            variant: 'solid',
+            status: 'success',
+            title: 'Success',
+            description: `Item updated to revision ${res.data.rev}`,
+          });
+        }
+        console.log('no update res?');
+      });
     },
   });
+
+  useEffect(() => {
+    formik.setValues(item);
+  }, [item]);
+
+  if (configRes.error) {
+    throw configRes.error;
+  }
 
   return (
     <VStack mb='8em' alignItems='stretch'>
@@ -62,6 +99,7 @@ export const ItemView = ({ item }: Props) => {
             colorScheme='green'
             disabled={!formik.dirty && formik.isValid}
             onClick={formik.handleSubmit as any}
+            isLoading={isUpdating}
           >
             Save
           </Button>
@@ -174,9 +212,7 @@ export const ItemView = ({ item }: Props) => {
                         list={(formik.values as any)[name]}
                       />
                     )}
-                    { type === 'libraryStatus' && (
-                      <LibraryStatus name={name} />
-                    )}
+                    {type === 'libraryStatus' && <LibraryStatus name={name} />}
                   </FormControl>
                 ))}
               </Stack>

@@ -88,6 +88,7 @@ export const BaseSchema = z.object({
   _id: z.string(),
   name: z.string(),
   location: z.string(),
+  _rev: z.string(),
 });
 
 export type TBaseSchema = z.infer<typeof BaseSchema>;

@@ -1,4 +1,4 @@
-import { Heading } from '@chakra-ui/react';
+import { Button, ButtonGroup, Heading, HStack, VStack } from '@chakra-ui/react';
 
 import { AppHead } from '../components/AppHead';
 
@@ -8,7 +8,15 @@ const Index = () => {
       <AppHead subTitle='Items'>
         <meta name='description' content='Home page of My Storeleft' />
       </AppHead>
-      <Heading>Home</Heading>
+      <VStack justify='stretch' spacing='4'>
+        <Heading>Home</Heading>
+        <HStack>
+          <ButtonGroup>
+            <Button>New Item</Button>
+            <Button>View All Items</Button>
+          </ButtonGroup>
+        </HStack>
+      </VStack>
     </>
   );
 };

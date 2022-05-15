@@ -54,8 +54,10 @@ export const TableRow = ({
     </Tr>
   );
 };
+
 export const ItemList = () => {
   const allDocs = useAllDocs({
+    isLive: true,
     query: { limit: 100, skip: 0, include_docs: true },
   });
 

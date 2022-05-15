@@ -8,20 +8,16 @@ const mainNav = [
     href: '/',
   },
   {
+    name: 'Add Item',
+    href: '/items/create',
+  },
+  {
     name: 'Items',
     href: '/items',
   },
   {
-    name: 'Containers',
+    name: 'Places',
     href: '/containers',
-  },
-  {
-    name: 'Tree',
-    href: '/tree',
-  },
-  {
-    name: 'Search',
-    href: '/search',
   },
 ];
 

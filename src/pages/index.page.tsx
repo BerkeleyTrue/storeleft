@@ -1,6 +1,7 @@
 import { Button, ButtonGroup, Heading, HStack, VStack } from '@chakra-ui/react';
 
 import { AppHead } from '../components/AppHead';
+import { NextLink } from '../components/Links';
 
 const Index = () => {
   return (
@@ -12,8 +13,12 @@ const Index = () => {
         <Heading>Home</Heading>
         <HStack>
           <ButtonGroup>
-            <Button>New Item</Button>
+            <NextLink href='/items/create'>
+              <Button>New Item</Button>
+            </NextLink>
+              <NextLink href='/items'>
             <Button>View All Items</Button>
+            </NextLink>
           </ButtonGroup>
         </HStack>
       </VStack>

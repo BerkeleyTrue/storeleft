@@ -7,6 +7,7 @@ import { AppHead } from '../../components/AppHead';
 import { useGet } from '../../lib/pouchdb/useGet';
 import { TBaseSchema } from '../../model/model';
 import { useModel } from '../../model/use-model';
+import { useMemo } from 'react';
 
 interface Props {
   itemId: string;
@@ -34,7 +35,9 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
     query: { docId: itemId },
   });
 
-  const itemParse = model.safeParse(getRes.data);
+  const itemParse = useMemo(() => {
+    return model.safeParse(getRes.data);
+  }, [model, getRes.data]);
 
   if (!itemId || !getRes.data) {
     return <NotFound />;
@@ -56,7 +59,10 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
       <Box mb='1em'>
         <Heading>Item: {item.name || itemId || 'N/A'}</Heading>
       </Box>
-      <ItemView item={item} />
+      <ItemView<typeof model & TBaseSchema>
+        item={item}
+        onItemMutate={getRes.mutate}
+      />
     </>
   );
 };

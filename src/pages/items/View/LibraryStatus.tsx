@@ -1,7 +1,7 @@
 import * as R from 'remeda';
 import { Union } from 'ts-toolbelt';
 import { useCallback } from 'react';
-import { Box, FormLabel, HStack, Text, Switch, VStack } from '@chakra-ui/react';
+import { FormLabel, HStack, Text, Switch, VStack } from '@chakra-ui/react';
 import { useField } from 'formik';
 
 import { formatDate } from './utils';

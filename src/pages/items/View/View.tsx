@@ -29,14 +29,16 @@ import { usePut, usePost } from '../../../lib/pouchdb';
 import { defaultTo } from '../../../lib/remeda/defaultTo';
 import { StoreleftConfig } from '../../../types';
 import { useEffect } from 'react';
+import { KeyedMutator } from 'swr';
 
 const Form = chakra('form');
 
-interface Props {
+interface Props<T> {
   item: Partial<TBaseSchema>;
+  onItemMutate: KeyedMutator<T>;
 }
 
-export const ItemView = ({ item }: Props) => {
+export const ItemView = <Model extends {}>({ item, onItemMutate }: Props<Model>) => {
   const toast = useToast();
   const configRes = useConfig();
   const model = useModel();
@@ -76,15 +78,17 @@ export const ItemView = ({ item }: Props) => {
             title: 'Success',
             description: `Item updated to revision ${res.data.rev}`,
           });
+          onItemMutate();
+        } else {
+          console.log('no update res?');
         }
-        console.log('no update res?');
       });
     },
   });
 
   useEffect(() => {
-    formik.setValues(item);
-  }, [item]);
+    formik.resetForm({ values: item });
+  }, [item, formik.resetForm]);
 
   if (configRes.error) {
     throw configRes.error;

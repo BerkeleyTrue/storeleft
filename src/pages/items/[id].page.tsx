@@ -1,13 +1,14 @@
 import _ from 'lodash/fp';
+import { useMemo } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { Heading, Box } from '@chakra-ui/react';
 
 import { ViewItem } from './View/Item';
+
 import { AppHead } from '../../components/AppHead';
 import { useGet } from '../../lib/pouchdb/useGet';
 import { TBaseSchema } from '../../model/model';
 import { useModel } from '../../model/use-model';
-import { useMemo } from 'react';
 
 interface Props {
   itemId: string;
@@ -60,6 +61,7 @@ const ViewItemPage: NextPage<Props> = ({ itemId }) => {
         <Heading>Item: {item.name || itemId || 'N/A'}</Heading>
       </Box>
       <ViewItem<typeof model & TBaseSchema>
+        type='update'
         item={item}
         onItemMutate={getRes.mutate}
       />

@@ -1,5 +1,7 @@
 import * as R from 'remeda';
 import dayjs from 'dayjs';
+import { useEffect } from 'react';
+import { KeyedMutator } from 'swr';
 import { chakra } from '@chakra-ui/system';
 import {
   Box,
@@ -24,32 +26,40 @@ import { DatePicker } from './date';
 import { ListField } from './List';
 import { LibraryStatus } from './LibraryStatus';
 
-import { TBaseSchema } from '../../../model/model';
+import { NewItemSchema, TBaseSchema, TNewItemSchema } from '../../../model/model';
 import { useConfig } from '../../../services/config/use-config';
 import { useModel } from '../../../model/use-model';
 import { usePut, usePost } from '../../../lib/pouchdb';
 import { defaultTo } from '../../../lib/remeda/defaultTo';
-import { DataDefinition, StoreleftConfig } from '../../../types';
-import { useEffect } from 'react';
-import { KeyedMutator } from 'swr';
+import { StoreleftConfig } from '../../../types';
+import { useRouter } from 'next/router';
 
 const Form = chakra('form');
 
-interface Props<T> {
-  item: Partial<TBaseSchema>;
-  onItemMutate: KeyedMutator<T>;
-}
+const isExistingItem = (
+  i: Partial<TBaseSchema> | Partial<TNewItemSchema>,
+): i is Partial<TBaseSchema> => '_id' in i;
 
-export const ViewItem = <Model extends {}>({
-  item,
-  onItemMutate,
-}: Props<Model>) => {
+type Props<T> =
+  | {
+      type: 'new';
+      item: Partial<TNewItemSchema>;
+    }
+  | {
+      type: 'update';
+      item: Partial<TBaseSchema>;
+      onItemMutate: KeyedMutator<T>;
+    };
+
+export const ViewItem = <Model extends {}>(props: Props<Model>) => {
   const toast = useToast();
   const configRes = useConfig();
   const model = useModel();
-  const [putResults, putItem] = usePut<typeof model>();
-  const [postResults, postItem] = usePost<typeof model>();
+  const router = useRouter();
+  const [putResults, putItem] = usePut<Model>();
+  const [postResults, postItem] = usePost<Model>();
   const isUpdating = putResults.isFetching || postResults.isFetching;
+  const isNewItem = props.type === 'new';
 
   const dataFields = R.pipe(
     configRes.config,
@@ -58,11 +68,12 @@ export const ViewItem = <Model extends {}>({
   );
 
   const formik = useFormik({
-    initialValues: item,
-    validationSchema: toFormikValidationSchema(model),
+    initialValues: props.item,
+    validationSchema: toFormikValidationSchema(isNewItem ? NewItemSchema : model),
     onSubmit: (doc) => {
-      let p = Promise.resolve(doc._id ? putResults : postResults);
-      if (doc._id) {
+      console.log('submitting');
+      let p = Promise.resolve(isExistingItem(doc) ? putResults : postResults);
+      if (isExistingItem(doc)) {
         p = putItem({ doc });
       } else {
         p = postItem({ doc });
@@ -83,7 +94,14 @@ export const ViewItem = <Model extends {}>({
             title: 'Success',
             description: `Item updated to revision ${res.data.rev}`,
           });
-          onItemMutate();
+
+          if ('onItemMutate' in props) {
+            props.onItemMutate();
+          }
+
+          if (isNewItem && res.data.id) {
+            router.push(`/items/${res.data.id}`);
+          }
         } else {
           console.log('no update res?');
         }
@@ -92,14 +110,14 @@ export const ViewItem = <Model extends {}>({
   });
 
   useEffect(() => {
-    formik.resetForm({ values: item });
-  }, [item, formik.resetForm]);
+    formik.resetForm({ values: props.item });
+  }, [props.item, formik.resetForm]);
 
   if (configRes.error) {
     throw configRes.error;
   }
 
-  const rev = item._rev || (item._id ? 'N/A' : 'NEW');
+  const rev = isNewItem ? 'NEW' : props.item._rev;
 
   return (
     <VStack mb='8em' alignItems='stretch'>
@@ -119,8 +137,8 @@ export const ViewItem = <Model extends {}>({
           </Button>
         </ButtonGroup>
         <ButtonGroup size='sm' spacing='4' colorScheme='cyan' variant='ghost'>
-          <Button>Duplicate</Button>
-          <Button>Add to Container</Button>
+          <Button disabled={isNewItem}>Duplicate</Button>
+          <Button disabled={isNewItem}>Add to Container</Button>
           <Button onClick={formik.handleReset}>Reset</Button>
         </ButtonGroup>
       </VStack>

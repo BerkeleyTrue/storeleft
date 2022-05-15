@@ -84,12 +84,26 @@ export const forkJoinDataField = (
   return [key, modDatafieldOptional(dataField, zType)];
 };
 
+export const NewItemSchema = z.object({
+  name: z.string().default(''),
+  location: z.string().default(''),
+  type: z.literal('item'),
+});
+
+export type TNewItemSchema = z.infer<typeof NewItemSchema>
+
 export const BaseSchema = z.object({
   _id: z.string(),
-  name: z.string(),
-  location: z.string(),
   _rev: z.string(),
   type: z.literal('item'),
+  name: z.string().default(''),
+  location: z.string().default(''),
+});
+
+export const createNew = () => ({
+  name: '',
+  location: '',
+  type: 'item' as const,
 });
 
 export type TBaseSchema = z.infer<typeof BaseSchema>;

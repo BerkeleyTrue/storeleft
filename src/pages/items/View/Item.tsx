@@ -1,6 +1,6 @@
 import * as R from 'remeda';
 import dayjs from 'dayjs';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { KeyedMutator } from 'swr';
 import { chakra } from '@chakra-ui/system';
 import {
@@ -26,13 +26,18 @@ import { DatePicker } from './date';
 import { ListField } from './List';
 import { LibraryStatus } from './LibraryStatus';
 
-import { NewItemSchema, TBaseSchema, TNewItemSchema } from '../../../model/model';
+import {
+  NewItemSchema,
+  TBaseSchema,
+  TNewItemSchema,
+} from '../../../model/model';
 import { useConfig } from '../../../services/config/use-config';
 import { useModel } from '../../../model/use-model';
 import { usePut, usePost } from '../../../lib/pouchdb';
 import { defaultTo } from '../../../lib/remeda/defaultTo';
 import { StoreleftConfig } from '../../../types';
 import { useRouter } from 'next/router';
+import { Group } from './Group';
 
 const Form = chakra('form');
 
@@ -69,7 +74,9 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
 
   const formik = useFormik({
     initialValues: props.item,
-    validationSchema: toFormikValidationSchema(isNewItem ? NewItemSchema : model),
+    validationSchema: toFormikValidationSchema(
+      isNewItem ? NewItemSchema : model,
+    ),
     onSubmit: (doc) => {
       console.log('submitting');
       let p = Promise.resolve(isExistingItem(doc) ? putResults : postResults);
@@ -109,6 +116,11 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
     },
   });
 
+  const resetForm = useCallback(() => {
+    console.log('props.item: ', props.item);
+    formik.resetForm({ values: props.item });
+  }, [props.item, formik.handleReset]);
+
   useEffect(() => {
     formik.resetForm({ values: props.item });
   }, [props.item, formik.resetForm]);
@@ -139,7 +151,7 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
         <ButtonGroup size='sm' spacing='4' colorScheme='cyan' variant='ghost'>
           <Button disabled={isNewItem}>Duplicate</Button>
           <Button disabled={isNewItem}>Add to Container</Button>
-          <Button onClick={formik.handleReset}>Reset</Button>
+          <Button onClick={resetForm}>Reset</Button>
         </ButtonGroup>
       </VStack>
       <Form
@@ -151,118 +163,8 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
         onSubmit={formik.handleSubmit}
       >
         <FormikProvider value={formik}>
-          {dataFields.map(({ displayName, fields }) => (
-            <Box
-              w='full'
-              maxW='2xl'
-              mx='auto'
-              mb='10'
-              px={4}
-              py={3}
-              bg='gray.700'
-              shadow='md'
-              rounded='md'
-              key={displayName}
-            >
-              <Flex justifyContent='flex-start' alignItems='center'>
-                <Box
-                  as='span'
-                  bg='brand.300'
-                  color='brand.900'
-                  px={3}
-                  py={1}
-                  rounded='full'
-                  textTransform='uppercase'
-                  fontSize='xs'
-                >
-                  {displayName}
-                </Box>
-                {displayName == 'Main' && (
-                  <>
-                    <Spacer />
-                    <Box
-                      as='span'
-                      bg='brand.300'
-                      color='brand.900'
-                      px={3}
-                      py={1}
-                      rounded='full'
-                      textTransform='uppercase'
-                      fontSize='xs'
-                    >
-                      <Badge>rev: {rev}</Badge>
-                    </Box>
-                  </>
-                )}
-              </Flex>
-              <Stack px={4} py={5} spacing={6} p={{ sm: 6 }}>
-                {fields.map(({ displayName, type, name, disabled }) => (
-                  <FormControl as={GridItem} colSpan={[6, 3]} key={name}>
-                    <FormLabel
-                      htmlFor={name}
-                      fontSize='sm'
-                      fontWeight='md'
-                      color='gray.50'
-                    >
-                      {displayName}
-                    </FormLabel>
-                    {type === 'string' && (
-                      <Input
-                        type={type}
-                        name={name}
-                        id={name}
-                        disabled={disabled}
-                        onChange={formik.handleChange}
-                        value={(formik.values as any)[name]}
-                        focusBorderColor='brand.400'
-                        mt='1'
-                        rounded='md'
-                        shadow='sm'
-                        size='sm'
-                        w='full'
-                      />
-                    )}
-                    {type === 'updatedAt' && (
-                      <Input
-                        type='text'
-                        name={name}
-                        id={name}
-                        disabled={true}
-                        value={dayjs((formik.values as any)[name]).format(
-                          'YYYY/MM/DD-HH:MM',
-                        )}
-                        focusBorderColor='brand.400'
-                        mt='1'
-                        rounded='md'
-                        shadow='sm'
-                        size='sm'
-                        w='full'
-                      />
-                    )}
-                    {type === 'path' && (
-                      <PathInput
-                        type={type}
-                        name={name}
-                        disabled={disabled}
-                        onChange={formik.handleChange}
-                        value={(formik.values as any)[name]}
-                      />
-                    )}
-                    {type === 'date' && (
-                      <DatePicker disabled={disabled} id={name} name={name} />
-                    )}
-                    {type === 'list' && (
-                      <ListField
-                        disabled={disabled}
-                        name={name}
-                        list={(formik.values as any)[name]}
-                      />
-                    )}
-                    {type === 'libraryStatus' && <LibraryStatus name={name} />}
-                  </FormControl>
-                ))}
-              </Stack>
-            </Box>
+          {dataFields.map((groupProps) => (
+            <Group key={groupProps.displayName} {...groupProps} rev={rev} />
           ))}
         </FormikProvider>
       </Form>

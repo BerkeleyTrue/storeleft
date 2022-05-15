@@ -1,6 +1,6 @@
 import { Union } from 'ts-toolbelt';
 import { useField } from 'formik';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import {
   AutoComplete,
   AutoCompleteCreatable,
@@ -15,12 +15,12 @@ type OnChange = Union.NonNullable<
 >;
 
 interface Props {
-  list: string[];
   disabled: boolean;
   name: string;
 }
-export const ListField = ({ list = [], disabled, name }: Props) => {
+export const ListField = ({ disabled, name }: Props) => {
   const [field, , helpers] = useField(name || '');
+  const [list]= useState([]);
 
   const handleChange = useCallback<OnChange>(
     (values) => {
@@ -50,15 +50,15 @@ export const ListField = ({ list = [], disabled, name }: Props) => {
         }
       </AutoCompleteInput>
       <AutoCompleteList>
-        {list.map((list, cid) => (
+        {list.map((listItem, cid) => (
           <AutoCompleteItem
             key={`option-${cid}`}
-            value={list}
+            value={listItem}
             textTransform='capitalize'
             _selected={{ bg: 'whiteAlpha.50' }}
             _focus={{ bg: 'whiteAlpha.100' }}
           >
-            {list}
+            {listItem}
           </AutoCompleteItem>
         ))}
         <AutoCompleteCreatable />

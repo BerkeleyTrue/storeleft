@@ -129,6 +129,21 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
     formik.resetForm({ values: initialValues });
   }, [props.item, formik.resetForm]);
 
+  const duplicate = useCallback(() => {
+    if (isNewItem) {
+      return;
+    }
+    router.push(`/items/create?duplicate=${encodeURIComponent(props.item?._id || '')}`);
+  }, [ router ])
+
+  const addToContainer = useCallback(() => {
+    if (isNewItem) {
+      return;
+    }
+
+    router.push(`/items/create?addTo=${encodeURIComponent(props.item?.location || '')}`);
+  }, [ router ])
+
   if (configRes.error) {
     throw configRes.error;
   }
@@ -153,8 +168,8 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
           </Button>
         </ButtonGroup>
         <ButtonGroup size='sm' spacing='4' colorScheme='cyan' variant='ghost'>
-          <Button disabled={isNewItem}>Duplicate</Button>
-          <Button disabled={isNewItem}>Add to Container</Button>
+          <Button disabled={isNewItem} onClick={duplicate}>Duplicate</Button>
+          <Button disabled={isNewItem} onClick={addToContainer}>Add to Container</Button>
           <Button onClick={resetForm}>Reset</Button>
         </ButtonGroup>
       </VStack>

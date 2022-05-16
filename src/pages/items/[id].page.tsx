@@ -7,7 +7,7 @@ import { ViewItem } from './View/Item';
 
 import { AppHead } from '../../components/AppHead';
 import { useGet } from '../../lib/pouchdb/useGet';
-import { TBaseSchema } from '../../model/model';
+import { BaseSchema, TBaseSchema } from '../../model/model';
 import { useModel } from '../../model/use-model';
 
 interface Props {
@@ -31,14 +31,14 @@ const NotFound = () => {
 };
 
 const ViewItemPage: NextPage<Props> = ({ itemId }) => {
-  const model = useModel();
-  const getRes = useGet<typeof model & TBaseSchema>({
+  const UserSchema = useModel();
+  const getRes = useGet<typeof UserSchema & TBaseSchema>({
     query: { docId: itemId },
   });
 
   const itemParse = useMemo(() => {
-    return model.safeParse(getRes.data);
-  }, [model, getRes.data]);
+    return UserSchema.merge(BaseSchema).safeParse(getRes.data);
+  }, [UserSchema, getRes.data]);
 
   if (!itemId || !getRes.data) {
     return <NotFound />;
@@ -60,7 +60,7 @@ const ViewItemPage: NextPage<Props> = ({ itemId }) => {
       <Box mb='1em'>
         <Heading>Item: {item.name || itemId || 'N/A'}</Heading>
       </Box>
-      <ViewItem<typeof model & TBaseSchema>
+      <ViewItem<typeof UserSchema & TBaseSchema>
         type='update'
         item={item}
         onItemMutate={getRes.mutate}

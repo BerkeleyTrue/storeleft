@@ -3,14 +3,14 @@ import { Heading, VStack } from '@chakra-ui/react';
 
 import { AppHead } from '../../components/AppHead';
 import { ViewItem } from './View/Item';
-import { createNew, TNewItemSchema } from '../../model/model';
+import { NewItemSchema, TNewItemSchema } from '../../model/model';
 import { useModel } from '../../model/use-model';
 
 interface Props {}
 
 const NewItem = ({}: Props) => {
-  const model = useModel();
-  const item = useMemo(() => createNew(), []);
+  const UserModel = useModel();
+  const item = useMemo(() => NewItemSchema.merge(UserModel).parse({}), []);
 
   return (
     <>
@@ -19,7 +19,7 @@ const NewItem = ({}: Props) => {
       </AppHead>
       <VStack>
         <Heading>New Item</Heading>
-        <ViewItem<typeof model & TNewItemSchema> type='new' item={item} />
+        <ViewItem<typeof UserModel & TNewItemSchema> type='new' item={item} />
       </VStack>
     </>
   );

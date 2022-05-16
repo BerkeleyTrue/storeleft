@@ -86,27 +86,19 @@ export const forkJoinDataField = (
 
 export const NewItemSchema = z.object({
   name: z.string().default(''),
-  location: z.string().default(''),
-  type: z.literal('item'),
+  location: z.string().default('/'),
+  type: z.literal('item').default('item'),
 });
 
 export type TNewItemSchema = z.infer<typeof NewItemSchema>
 
 export const BaseSchema = z.object({
-  _id: z.string(),
+  _id: z.string().uuid(),
   _rev: z.string(),
-  type: z.literal('item'),
-  name: z.string().default(''),
-  location: z.string().default(''),
-});
-
-export const createNew = () => ({
-  name: '',
-  location: '',
-  type: 'item' as const,
-});
+}).merge(NewItemSchema);
 
 export type TBaseSchema = z.infer<typeof BaseSchema>;
+
 export const generateModel = (config: StoreleftConfig) => {
   const UserSchema = R.pipe(
     config,

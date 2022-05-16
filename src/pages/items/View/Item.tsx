@@ -48,7 +48,7 @@ const isExistingItem = (
 type Props<T> =
   | {
       type: 'new';
-      item: Partial<TNewItemSchema>;
+      item: TNewItemSchema;
     }
   | {
       type: 'update';

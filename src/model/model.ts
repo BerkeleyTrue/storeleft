@@ -15,12 +15,12 @@ const zDateFactory = z.preprocess((arg) => {
 }, z.date());
 
 const libraryStatusEvents = z
-    .object({
-      checkIn: z.boolean(),
-      user: z.string(),
-      date: z.union([z.date(), z.string()]),
-    })
-    .array()
+  .object({
+    checkIn: z.boolean(),
+    user: z.string(),
+    date: z.union([z.date(), z.string()]),
+  })
+  .array();
 
 export type TLibraryStatusEvents = z.infer<typeof libraryStatusEvents>;
 
@@ -28,7 +28,6 @@ export const LibraryStatusSchema = z.object({
   status: z.boolean().default(false),
   events: libraryStatusEvents.optional(),
 });
-
 
 export type TLibraryStatus = z.infer<typeof LibraryStatusSchema>;
 
@@ -93,12 +92,14 @@ export const NewItemSchema = z.object({
   type: z.literal('item').default('item'),
 });
 
-export type TNewItemSchema = z.infer<typeof NewItemSchema>
+export type TNewItemSchema = z.infer<typeof NewItemSchema>;
 
-export const BaseSchema = z.object({
-  _id: z.string().uuid(),
-  _rev: z.string(),
-}).merge(NewItemSchema);
+export const BaseSchema = z
+  .object({
+    _id: z.string().uuid(),
+    _rev: z.string(),
+  })
+  .merge(NewItemSchema);
 
 export type TBaseSchema = z.infer<typeof BaseSchema>;
 
@@ -113,5 +114,5 @@ export const generateModel = (config: StoreleftConfig) => {
     (userDef: Record<string, ZodTypeAny>) => z.object(userDef),
   );
 
-  return UserSchema.merge(BaseSchema);
+  return UserSchema;
 };

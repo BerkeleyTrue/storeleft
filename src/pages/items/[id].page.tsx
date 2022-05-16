@@ -60,7 +60,7 @@ const ViewItemPage: NextPage<Props> = ({ itemId }) => {
       <Box mb='1em'>
         <Heading>Item: {item.name || itemId || 'N/A'}</Heading>
       </Box>
-      <ViewItem<typeof UserSchema & TBaseSchema>
+      <ViewItem<TBaseSchema & typeof UserSchema>
         type='update'
         item={item}
         onItemMutate={getRes.mutate}

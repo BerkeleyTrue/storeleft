@@ -10,7 +10,7 @@ interface Props {}
 
 const NewItem = ({}: Props) => {
   const UserModel = useModel();
-  const item = useMemo(() => NewItemSchema.merge(UserModel).parse({}), []);
+  const item = useMemo(() => UserModel.merge(NewItemSchema).parse({}), []);
 
   return (
     <>
@@ -19,7 +19,7 @@ const NewItem = ({}: Props) => {
       </AppHead>
       <VStack>
         <Heading>New Item</Heading>
-        <ViewItem<typeof UserModel & TNewItemSchema> type='new' item={item} />
+        <ViewItem<TNewItemSchema & typeof UserModel> type='new' item={item} />
       </VStack>
     </>
   );

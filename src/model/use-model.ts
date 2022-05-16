@@ -7,12 +7,9 @@ import { useConfig } from '../services/config/use-config';
 
 export const useModel = () => {
   const configRes = useConfig();
-  return useMemo(
-    () => {
-      return configRes.error || !configRes.data
-        ? z.object({})
-        : generateModel(configRes.data);
-    },
-    [configRes.data, configRes.error]
-  );
+  return useMemo(() => {
+    return configRes.error || !configRes.data
+      ? z.object({})
+      : generateModel(configRes.data);
+  }, [configRes.data, configRes.error]);
 };

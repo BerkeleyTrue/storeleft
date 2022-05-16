@@ -84,7 +84,6 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
       isNewItem ? NewItemSchema : model,
     ),
     onSubmit: (doc) => {
-      console.log('submitting');
       let p = Promise.resolve(isExistingItem(doc) ? putResults : postResults);
       if (isExistingItem(doc)) {
         p = putItem({ doc });

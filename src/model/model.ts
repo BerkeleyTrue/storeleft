@@ -61,7 +61,7 @@ export const getZodFromType = (fieldType: StoreLeftDataTypes) => {
   }
 
   if (zodTypeFactory === z.undefined) {
-    console.log(
+    console.warn(
       `Expected type for ${fieldType}: but found none, using undefined`,
     );
   }

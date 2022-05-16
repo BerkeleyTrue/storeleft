@@ -24,18 +24,21 @@ const libraryStatusEvents = z
 
 export type TLibraryStatusEvents = z.infer<typeof libraryStatusEvents>;
 
-const libraryStatus = z.object({
+export const LibraryStatusSchema = z.object({
   status: z.boolean().default(false),
   events: libraryStatusEvents.optional(),
 });
 
-export type TLibraryStatus = z.infer<typeof libraryStatus>;
+
+export type TLibraryStatus = z.infer<typeof LibraryStatusSchema>;
+
+export type TDataTypes = string | string[] | boolean | Date | TLibraryStatus;
 
 interface IDataFieldTypeToZodMap {
   [key: string]: () => ZodTypeAny;
 }
 const dataFieldTypeToZodMap: IDataFieldTypeToZodMap = {
-  libraryStatus: () => libraryStatus,
+  libraryStatus: () => LibraryStatusSchema,
   updatedAt: () => zDateFactory,
   path: z.string,
   list: () => z.string().array(),

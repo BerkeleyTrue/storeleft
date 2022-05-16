@@ -1,49 +1,41 @@
 import * as R from 'remeda';
-import dayjs from 'dayjs';
-import { useCallback, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useCallback, useEffect, useMemo } from 'react';
 import { KeyedMutator } from 'swr';
 import { chakra } from '@chakra-ui/system';
-import {
-  Box,
-  Stack,
-  Flex,
-  Button,
-  VStack,
-  FormControl,
-  GridItem,
-  FormLabel,
-  Input,
-  ButtonGroup,
-  useToast,
-  Badge,
-  Spacer,
-} from '@chakra-ui/react';
+import { Button, VStack, ButtonGroup, useToast } from '@chakra-ui/react';
 import { FormikProvider, useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
-import { PathInput } from './PathInput';
-import { DatePicker } from './date';
-import { ListField } from './List';
-import { LibraryStatus } from './LibraryStatus';
-
+import { Group } from './Group';
 import {
+  LibraryStatusSchema,
   NewItemSchema,
   TBaseSchema,
+  TDataTypes,
   TNewItemSchema,
 } from '../../../model/model';
 import { useConfig } from '../../../services/config/use-config';
 import { useModel } from '../../../model/use-model';
 import { usePut, usePost } from '../../../lib/pouchdb';
 import { defaultTo } from '../../../lib/remeda/defaultTo';
-import { StoreleftConfig } from '../../../types';
-import { useRouter } from 'next/router';
-import { Group } from './Group';
+import { StoreleftConfig, StoreLeftDataTypes } from '../../../types';
 
 const Form = chakra('form');
 
 const isExistingItem = (
   i: Partial<TBaseSchema> | Partial<TNewItemSchema>,
 ): i is Partial<TBaseSchema> => '_id' in i;
+
+const typeToInitialValueMap: { [K in StoreLeftDataTypes]: () => TDataTypes } = {
+  string: () => '',
+  boolean: () => false,
+  path: () => '/',
+  date: () => new Date(),
+  updatedAt: () => new Date().toISOString(),
+  list: () => [] as string[],
+  libraryStatus: () => LibraryStatusSchema.parse({}),
+};
 
 type Props<T> =
   | {
@@ -66,14 +58,28 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
   const isUpdating = putResults.isFetching || postResults.isFetching;
   const isNewItem = props.type === 'new';
 
-  const dataFields = R.pipe(
-    configRes.config,
-    defaultTo<StoreleftConfig>({ dataDefinition: [] }),
-    R.prop('dataDefinition'),
-  );
+  const [dataFields, initialValues] = useMemo(() => {
+    const dataFields = R.pipe(
+      configRes.config,
+      defaultTo<StoreleftConfig>({ dataDefinition: [] }),
+      R.prop('dataDefinition'),
+    );
+    const initialValues = R.pipe(
+      dataFields,
+      R.map(R.prop('fields')),
+      R.flatten(),
+      R.map(({ name, type }): [string, TDataTypes] => [
+        name,
+        typeToInitialValueMap[type](),
+      ]),
+      R.fromPairs,
+    );
+
+    return [dataFields, R.merge(initialValues, props.item)];
+  }, [configRes.config]);
 
   const formik = useFormik({
-    initialValues: props.item,
+    initialValues,
     validationSchema: toFormikValidationSchema(
       isNewItem ? NewItemSchema : model,
     ),
@@ -117,12 +123,11 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
   });
 
   const resetForm = useCallback(() => {
-    console.log('props.item: ', props.item);
-    formik.resetForm({ values: props.item });
+    formik.resetForm({ values: initialValues });
   }, [props.item, formik.handleReset]);
 
   useEffect(() => {
-    formik.resetForm({ values: props.item });
+    formik.resetForm({ values: initialValues });
   }, [props.item, formik.resetForm]);
 
   if (configRes.error) {

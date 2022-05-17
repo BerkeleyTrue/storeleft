@@ -10,9 +10,14 @@ const ddoc = {
   _id: '_design/storeleft',
   views: {
     tags: {
-      map: `function (doc) { if (doc.tags) {\n    emit(doc._id, doc.tags);\n  }\n}`,
+      map: 'function (doc) { if (doc.tags) {\n    emit(doc._id, doc.tags);\n  }\n}',
       reduce:
         'function (keys, values, rereduce) {\n\n  return [...new Set(values.reduce((acc, tags) => acc.concat(tags), []))];\n}',
+    },
+    containers: {
+      map: "function (doc) {\n  if (!doc.location) {\n    return;\n  }\n  let paths = doc.location.split('/');\n  if (!paths[0] && paths[1]) {\n    paths = paths.splice(1);\n  }\n  emit(doc._id, paths);\n}",
+      reduce:
+        'function (keys, values, rereduce) {\n  const flatten = arr => [].concat(...arr);\n  const zip = (...arr) => Array(Math.max(...arr.map(a => a.length))).fill().map((_,i) => arr.map(a => a[i]));  \n  if (rereduce) {\n    const paths =  zip(...values);\n    return paths.map((level) => [...new Set(flatten(level)) ]);\n    //return values;\n  } else {\n  \n    return zip(...values);\n  }\n}',
     },
   },
 };

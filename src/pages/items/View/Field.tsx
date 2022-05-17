@@ -1,11 +1,11 @@
 import { FormControl, GridItem, FormLabel } from '@chakra-ui/react';
 
-import { PathInput } from './PathInput';
-import { DatePicker } from './date';
-import { ListField } from './List';
-import { LibraryStatus } from './LibraryStatus';
-import { UpdatedAt } from './UpdatedAt';
-import { Text } from './Text';
+import { PathInput } from './DataTypes/PathInput';
+import { DatePicker } from './DataTypes/date';
+import { ListField } from './DataTypes/List';
+import { LibraryStatus } from './DataTypes/LibraryStatus';
+import { UpdatedAt } from './DataTypes/UpdatedAt';
+import { Text } from './DataTypes/Text';
 
 interface Props {
   displayName: string;

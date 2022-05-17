@@ -9,7 +9,7 @@ import {
   AutoCompleteList,
   AutoCompleteTag,
 } from '@choc-ui/chakra-autocomplete';
-import { useQuery } from '../../../lib/pouchdb/useQuery';
+import { useQuery } from '../../../../lib/pouchdb/useQuery';
 
 type OnChange = Union.NonNullable<
   Parameters<typeof AutoComplete>[0]['onChange']

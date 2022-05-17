@@ -4,9 +4,9 @@ import { useCallback } from 'react';
 import { FormLabel, HStack, Text, Switch, VStack } from '@chakra-ui/react';
 import { useField } from 'formik';
 
-import { formatDate } from './utils';
-import { TLibraryStatus, TLibraryStatusEvents } from '../../../model/model';
-import { defaultTo } from '../../../lib/remeda/defaultTo';
+import { formatDate } from '../utils';
+import { TLibraryStatus, TLibraryStatusEvents } from '../../../../model/model';
+import { defaultTo } from '../../../../lib/remeda/defaultTo';
 
 type OnChange = Union.NonNullable<Parameters<typeof Switch>[0]['onChange']>;
 

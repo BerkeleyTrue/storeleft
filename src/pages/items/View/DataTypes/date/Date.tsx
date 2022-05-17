@@ -17,7 +17,7 @@ import { useField } from 'formik';
 
 import { CalendarPanel } from './CalPanel';
 import { OnDateSelected } from './types';
-import { formatDate } from '../utils';
+import { formatDate } from '../../utils';
 
 export interface Props {
   id?: string;

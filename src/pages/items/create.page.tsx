@@ -10,7 +10,10 @@ interface Props {}
 
 const NewItem = ({}: Props) => {
   const UserModel = useModel();
-  const item = useMemo(() => UserModel.merge(NewItemSchema).parse({}), []);
+  const item = useMemo(
+    () => UserModel.merge(NewItemSchema).parse({}),
+    [UserModel],
+  );
 
   return (
     <>

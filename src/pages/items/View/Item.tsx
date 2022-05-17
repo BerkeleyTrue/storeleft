@@ -43,6 +43,10 @@ type Props<T> =
       item: TNewItemSchema;
     }
   | {
+      type: 'duplicate';
+      item: Partial<TBaseSchema>;
+    }
+  | {
       type: 'update';
       item: Partial<TBaseSchema>;
       onItemMutate: KeyedMutator<T>;
@@ -133,7 +137,7 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
     if (isNewItem) {
       return;
     }
-    router.push(`/items/create?duplicate=${encodeURIComponent(props.item?._id || '')}`);
+    router.push(`/items/duplicate?itemId=${encodeURIComponent(props.item?._id || '')}`);
   }, [ router ])
 
   const addToContainer = useCallback(() => {
@@ -141,7 +145,7 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
       return;
     }
 
-    router.push(`/items/create?addTo=${encodeURIComponent(props.item?.location || '')}`);
+    router.push(`/items/add-to?location=${encodeURIComponent(props.item?.location || '')}`);
   }, [ router ])
 
   if (configRes.error) {
@@ -168,7 +172,7 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
           </Button>
         </ButtonGroup>
         <ButtonGroup size='sm' spacing='4' colorScheme='cyan' variant='ghost'>
-          <Button disabled={isNewItem} onClick={duplicate}>Duplicate</Button>
+          <Button disabled={props.type !== 'update'} onClick={duplicate}>Duplicate</Button>
           <Button disabled={isNewItem} onClick={addToContainer}>Add to Container</Button>
           <Button onClick={resetForm}>Reset</Button>
         </ButtonGroup>

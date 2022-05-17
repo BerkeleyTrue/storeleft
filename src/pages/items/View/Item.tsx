@@ -15,7 +15,7 @@ import {
   TDataTypes,
   TNewItemSchema,
 } from '../../../model/model';
-import { useConfig } from '../../../services/config/use-config';
+import { useConfig } from '../../../application/config/use-config';
 import { useModel } from '../../../model/use-model';
 import { usePut, usePost } from '../../../lib/pouchdb';
 import { defaultTo } from '../../../lib/remeda/defaultTo';

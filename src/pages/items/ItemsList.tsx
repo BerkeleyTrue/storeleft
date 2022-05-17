@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 
 import { useAllDocs } from '../../lib/pouchdb/useAllDocs';
-import { useConfig } from '../../services/config/use-config';
+import { useConfig } from '../../application/config/use-config';
 import { DataDefinition, DataField } from '../../types';
 
 type AccessorFactory = (field: string) => (row: DataField) => any;

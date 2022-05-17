@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { useMemo } from 'react';
 
 import { generateModel } from './model';
-import { useConfig } from '../services/config/use-config';
+import { useConfig } from '../application/config/use-config';
 
 export const useModel = () => {
   const configRes = useConfig();

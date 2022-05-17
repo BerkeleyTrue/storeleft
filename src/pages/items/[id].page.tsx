@@ -1,7 +1,15 @@
 import _ from 'lodash/fp';
 import { useMemo } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
-import { Heading, Box } from '@chakra-ui/react';
+import {
+  Heading,
+  Box,
+  Spinner,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from '@chakra-ui/react';
 
 import { ViewItem } from './View/Item';
 
@@ -44,15 +52,15 @@ const ViewItemPage: NextPage<Props> = ({ itemId }) => {
     return <NotFound />;
   }
 
+  if (!itemParse.success && itemParse.error) {
+    console.error(itemParse.error);
+  }
+
   if (getRes.error) {
-    throw getRes.error;
+    console.error(getRes.error);
   }
 
-  if (!itemParse.success) {
-    throw itemParse.error;
-  }
-
-  const item = itemParse.data;
+  const item = (itemParse.success && itemParse.data) || { name: '' };
 
   return (
     <>
@@ -60,11 +68,23 @@ const ViewItemPage: NextPage<Props> = ({ itemId }) => {
       <Box mb='1em'>
         <Heading>Item: {item.name || itemId || 'N/A'}</Heading>
       </Box>
-      <ViewItem<TBaseSchema & typeof UserSchema>
-        type='update'
-        item={item}
-        onItemMutate={getRes.mutate}
-      />
+      {!getRes.data ? (
+        <Spinner />
+      ) : getRes.error || (!itemParse.success && itemParse.error) ? (
+        <Alert status='error'>
+          <AlertIcon />
+          <AlertTitle>Oops! Something went wrong</AlertTitle>
+          <AlertDescription>
+            Could not {getRes.error ? 'load' : 'parse'} item `{itemId}`
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <ViewItem<TBaseSchema & typeof UserSchema>
+          type='update'
+          item={item}
+          onItemMutate={getRes.mutate}
+        />
+      )}
     </>
   );
 };

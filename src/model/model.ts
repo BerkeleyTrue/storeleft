@@ -11,7 +11,11 @@ import {
 } from '../types';
 
 const zDateFactory = z.preprocess((arg) => {
-  if (typeof arg == 'string' || arg instanceof Date) return new Date(arg);
+  let date = arg;
+  if (typeof arg == 'string') {
+    date = new Date(arg)
+  };
+  return date;
 }, z.date());
 
 const libraryStatusEvents = z
@@ -39,6 +43,7 @@ interface IDataFieldTypeToZodMap {
 const dataFieldTypeToZodMap: IDataFieldTypeToZodMap = {
   libraryStatus: () => LibraryStatusSchema,
   updatedAt: () => zDateFactory,
+  date: () => zDateFactory,
   path: z.string,
   list: () => z.string().array(),
 };

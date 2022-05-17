@@ -27,6 +27,7 @@ export const PouchSync = ({ children }: PropsWithChildren<{}>) => {
       title: 'Syncing db...',
       status: 'info',
       variant: 'solid',
+      isClosable: true,
     });
 
     const syncSubscription = db.replicate.from(remoteUrl).on('complete', () => {
@@ -34,6 +35,7 @@ export const PouchSync = ({ children }: PropsWithChildren<{}>) => {
         title: 'initial replicate complete.',
         status: 'success',
         variant: 'solid',
+        isClosable: true,
       });
       setHasSynced(true);
     });
@@ -67,6 +69,7 @@ export const PouchSync = ({ children }: PropsWithChildren<{}>) => {
             status: 'error',
             variant: 'solid',
             description: `Failed to add index: ${err.message}`,
+            isClosable: true,
           });
         }
       })
@@ -75,6 +78,7 @@ export const PouchSync = ({ children }: PropsWithChildren<{}>) => {
           title: 'Index saved',
           status: 'info',
           variant: 'solid',
+          isClosable: true,
         });
       });
   }, [db, hasSynced]);

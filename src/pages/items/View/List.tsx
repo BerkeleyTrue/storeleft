@@ -1,6 +1,6 @@
 import { Union } from 'ts-toolbelt';
 import { useField } from 'formik';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   AutoComplete,
   AutoCompleteCreatable,
@@ -9,6 +9,7 @@ import {
   AutoCompleteList,
   AutoCompleteTag,
 } from '@choc-ui/chakra-autocomplete';
+import { useQuery } from '../../../lib/pouchdb/useQuery';
 
 type OnChange = Union.NonNullable<
   Parameters<typeof AutoComplete>[0]['onChange']
@@ -18,9 +19,14 @@ interface Props {
   disabled: boolean;
   name: string;
 }
+
 export const ListField = ({ disabled, name }: Props) => {
   const [field, , helpers] = useField(name || '');
-  const [list]= useState([]);
+  const tagsResponse = useQuery<string[]>({ fun: 'storeleft/tags' });
+
+  const list = useMemo<string[]>(() => {
+    return (tagsResponse?.data?.rows?.[0]?.value || ([] as string[])).sort();
+  }, [tagsResponse.data]);
 
   const handleChange = useCallback<OnChange>(
     (values) => {
@@ -37,6 +43,7 @@ export const ListField = ({ disabled, name }: Props) => {
       onChange={handleChange}
       onBlur={field.onBlur}
       value={field.value}
+      listAllValuesOnFocus
     >
       <AutoCompleteInput id={name} name={name} disabled={disabled}>
         {({ tags }) =>
@@ -52,16 +59,15 @@ export const ListField = ({ disabled, name }: Props) => {
       <AutoCompleteList>
         {list.map((listItem, cid) => (
           <AutoCompleteItem
-            key={`option-${cid}`}
+            key={`option-${listItem}-${cid}`}
             value={listItem}
-            textTransform='capitalize'
-            _selected={{ bg: 'whiteAlpha.50' }}
+            _selected={{ bg: 'whiteAlpha.200' }}
             _focus={{ bg: 'whiteAlpha.100' }}
+            _hover={{ bg: 'cyan' }}
           >
             {listItem}
           </AutoCompleteItem>
         ))}
-        <AutoCompleteCreatable />
       </AutoCompleteList>
     </AutoComplete>
   );

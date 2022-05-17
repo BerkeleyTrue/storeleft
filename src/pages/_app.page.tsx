@@ -11,6 +11,10 @@ import { PouchDbProvider } from '../lib/pouchdb/provider';
 
 const db = new PouchDb('storeleft');
 
+if (typeof window === 'object') {
+  (window as any).__DB__ = db;
+}
+
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <StrictMode>

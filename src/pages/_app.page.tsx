@@ -9,7 +9,7 @@ import { PouchSync } from '../components/PouchSync';
 import { Fonts } from '../components/Fonts';
 import { PouchDbProvider } from '../lib/pouchdb/provider';
 
-const db = new PouchDb('storeleft');
+const db = new PouchDb(process.env.NEXT_PUBLIC_COUCHDB_DB || 'storeleft');
 
 if (typeof window === 'object') {
   (window as any).__DB__ = db;

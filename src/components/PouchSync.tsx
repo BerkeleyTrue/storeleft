@@ -4,7 +4,9 @@ import { useAppEffect } from '../lib/hooks/use-app-effect';
 
 import { usePouchDbContext } from '../lib/pouchdb/useContext';
 
-const getRemoteUrl = () => `${window.location.origin}/api/db/storedown`;
+const dbName = process.env.NEXT_PUBLIC_COUCHDB_DB_REMOTE || process.env.NEXT_PUBLIC_COUCHDB_DB || 'storeleft';
+
+const getRemoteUrl = () => `${window.location.origin}/api/db/${dbName}`;
 
 const ddoc = {
   _id: '_design/storeleft',
@@ -29,7 +31,7 @@ export const PouchSync = ({ children }: PropsWithChildren<{}>) => {
   useAppEffect(() => {
     const remoteUrl = getRemoteUrl();
     toast({
-      title: 'Syncing db...',
+      title: `Syncing local '${db.name}' to remote '${dbName}'...`,
       status: 'info',
       variant: 'solid',
       isClosable: true,

@@ -6,7 +6,8 @@
   "scripts": {
     "start": "next",
     "start:prod": "next start",
-    "build": "next build"
+    "build": "next build",
+    "build:docker": "docker build -f docker/Dockerfile -t storeleft ."
   },
   "dependencies": {
     "@chakra-ui/hooks": "^2.0.0",

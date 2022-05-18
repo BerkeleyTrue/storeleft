@@ -41,7 +41,7 @@ export const PathInput = ({ name, disabled }: Props) => {
       helpers.setValue(values.join('/'));
       setQuery.off();
     },
-    [helpers],
+    [helpers, setQuery],
   );
   const value = useMemo<string[]>(() => {
     const paths = field.value.split('/');
@@ -65,7 +65,7 @@ export const PathInput = ({ name, disabled }: Props) => {
         helpers.setValue(R.dropLast(value, 1).join('/'));
       }
     },
-    [helpers.setValue, value],
+    [helpers, value, hasQuery,],
   );
 
   const handleInputChange = useCallback<

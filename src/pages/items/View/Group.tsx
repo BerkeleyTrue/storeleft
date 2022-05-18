@@ -1,19 +1,13 @@
 import { memo } from 'react';
 
-import {
-  Box,
-  Stack,
-  Flex,
-  Badge,
-  Spacer,
-} from '@chakra-ui/react';
+import { Box, Stack, Flex, Badge, Spacer } from '@chakra-ui/react';
 import { Field } from './Field';
 import { DataField } from '../../../types';
 
 type Props = {
   displayName: string;
+  fields: DataField[];
   rev?: string;
-  fields: DataField[]
 };
 
 export const Group = memo(({ displayName, rev, fields }: Props) => {
@@ -75,3 +69,5 @@ export const Group = memo(({ displayName, rev, fields }: Props) => {
     </Box>
   );
 });
+
+Group.displayName = 'DataDefinitionGroup';

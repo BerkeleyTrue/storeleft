@@ -27,7 +27,7 @@ export const Layout = ({ children }: PropsWithChildren<{}>) => {
 
   useEffect(() => {
     setSidebar.off();
-  }, [router.pathname]);
+  }, [setSidebar, router.pathname]);
 
   return (
     <Flex width='100vw' height='100vh'>

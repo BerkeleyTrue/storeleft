@@ -30,7 +30,7 @@ export const useGet = <Model>({
 
   const fetcher = useCallback(() => {
     return db.get<Model>(docId, { ...rest });
-  }, [db]);
+  }, [docId, db, rest]);
 
   return useSWR<FetcherResponse<Model>>(
     shouldPause ? null : ['get', docId],

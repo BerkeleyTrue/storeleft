@@ -38,7 +38,7 @@ export const LibraryStatus = ({ name }: Props) => {
         ]),
       ),
     });
-  }, []);
+  }, [helpers, meta.initialValue]);
 
   return (
     <VStack justify='stretch'>

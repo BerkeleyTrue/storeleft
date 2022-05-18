@@ -20,7 +20,7 @@ export const useAllDocs = ({
 
   const allDocsFetcher = useCallback(() => {
     return db.allDocs({ skip, limit, include_docs, ...rest });
-  }, [db]);
+  }, [db, skip, limit, include_docs, rest]);
 
   const res = useSWR(['allDocs', limit, skip, include_docs], allDocsFetcher);
 

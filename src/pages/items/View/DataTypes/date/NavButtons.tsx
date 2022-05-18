@@ -7,7 +7,7 @@ interface Props {
 }
 
 function createDatePickerBtn<P extends Props = Props>(forward: boolean) {
-  return ({ calendars, propsFactory }: P) => {
+  const DatePickerButton = ({ calendars, propsFactory }: P) => {
     const arrows: [string, string] = forward ? ['>', '->'] : ['<', '<-'];
 
     const monthBtn = (
@@ -30,6 +30,10 @@ function createDatePickerBtn<P extends Props = Props>(forward: boolean) {
     );
     return <>{forward ? [monthBtn, yearBtn] : [yearBtn, monthBtn]}</>;
   };
+
+  DatePickerButton.displayName = forward ? 'DPForwardButton' : 'DPBackwardButton';
+
+  return DatePickerButton;
 }
 
 export const ForwardButtons: React.FC<Props> = createDatePickerBtn(true);

@@ -86,7 +86,7 @@ export const PouchSync = ({ children }: PropsWithChildren<{}>) => {
           isClosable: true,
         });
       });
-  }, [db, hasSynced]);
+  }, [db, hasSynced, toast]);
 
   return <>{children}</>;
 };

@@ -57,7 +57,7 @@ export const DatePicker = ({
         return;
       }
     },
-    [helpers.setValue, setPopover]
+    [helpers, setPopover]
   );
 
   return (

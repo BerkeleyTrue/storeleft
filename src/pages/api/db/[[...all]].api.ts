@@ -9,7 +9,7 @@ export const config = {
   },
 };
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+const PouchPoxyRouter = (req: NextApiRequest, res: NextApiResponse) => {
   if (!process.env.COUCHDB_URL) {
     throw new TypeError('expected COUCHDB_URL to be defined but found ${COUCHDB_URL}');
   }
@@ -27,3 +27,5 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     ],
   });
 };
+
+export default PouchPoxyRouter;

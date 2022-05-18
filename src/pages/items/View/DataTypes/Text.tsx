@@ -26,3 +26,5 @@ export const Text = memo(({ name, disabled }: Props) => {
     />
   );
 });
+
+Text.displayName = 'TextField';

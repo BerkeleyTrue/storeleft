@@ -80,7 +80,7 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
     );
 
     return [dataFields, R.merge(initialValues, props.item)];
-  }, [configRes.config]);
+  }, [configRes.config, props.item]);
 
   const formik = useFormik({
     initialValues,
@@ -127,26 +127,33 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
 
   const resetForm = useCallback(() => {
     formik.resetForm({ values: initialValues });
-  }, [props.item, formik.handleReset]);
+  }, [formik, initialValues]);
 
   useEffect(() => {
     formik.resetForm({ values: initialValues });
-  }, [props.item, formik.resetForm]);
+  }, [formik, initialValues]);
 
+  const _id = isNewItem ? '' : props.item?._id;
   const duplicate = useCallback(() => {
     if (isNewItem) {
       return;
     }
-    router.push(`/items/duplicate?itemId=${encodeURIComponent(props.item?._id || '')}`);
-  }, [ router ])
+    router.push(
+      `/items/duplicate?itemId=${encodeURIComponent(_id || '')}`,
+    );
+  }, [router, isNewItem, _id]);
+
+  const location = !isNewItem && props.item?.location || '';
 
   const addToContainer = useCallback(() => {
     if (isNewItem) {
       return;
     }
 
-    router.push(`/items/add-to?location=${encodeURIComponent(props.item?.location || '')}`);
-  }, [ router ])
+    router.push(
+      `/items/add-to?location=${encodeURIComponent(location)}`,
+    );
+  }, [router, isNewItem, location]);
 
   if (configRes.error) {
     throw configRes.error;
@@ -172,8 +179,12 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
           </Button>
         </ButtonGroup>
         <ButtonGroup size='sm' spacing='4' colorScheme='cyan' variant='ghost'>
-          <Button disabled={props.type !== 'update'} onClick={duplicate}>Duplicate</Button>
-          <Button disabled={isNewItem} onClick={addToContainer}>Add to Container</Button>
+          <Button disabled={props.type !== 'update'} onClick={duplicate}>
+            Duplicate
+          </Button>
+          <Button disabled={isNewItem} onClick={addToContainer}>
+            Add to Container
+          </Button>
           <Button onClick={resetForm}>Reset</Button>
         </ButtonGroup>
       </VStack>

@@ -63,7 +63,7 @@ const DuplicateItemPage = ({ itemId }: Props) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [db]);
+  }, [db, itemId]);
 
   const item = useMemo(() => {
     if (!rawItem) {
@@ -90,7 +90,7 @@ const DuplicateItemPage = ({ itemId }: Props) => {
           <Alert status='error'>
             <AlertIcon />
             <AlertTitle>Oops! Something went wrong</AlertTitle>
-            <AlertDescription>Couldn't load item `{itemId}`</AlertDescription>
+            <AlertDescription>Could not load item `{itemId}`</AlertDescription>
           </Alert>
         ) : isLoading ? (
           <Spinner />

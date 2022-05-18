@@ -30,26 +30,24 @@ const formatDate = (date: string) => dayjs(date).format('YYYY/MM/DD HH:MM');
 const accessorFactoryMap: { [key: string]: AccessorFactory } = {
   libraryStatus: (field) =>
     _.flow(createFieldValueAccessor(field), (isCheckedIn) =>
-      isCheckedIn ? 'Checked In' : 'Checked Out'
+      isCheckedIn ? 'Checked In' : 'Checked Out',
     ),
   list: (field) => _.flow(createFieldValueAccessor(field), _.join('\n')),
   lastModified: (field) => _.flow(createFieldValueAccessor(field), formatDate),
   lastDate: (field) => _.flow(createFieldValueAccessor(field), formatDate),
 };
 
-export const TableRow = ({
-  getRowProps,
-  cells,
-  original,
-}: Row) => {
+export const TableRow = ({ getRowProps, cells, original }: Row) => {
   const router = useRouter();
+
   const handleClick = useCallback(() => {
     router.push(`/items/${(original as any)._id}`);
-  }, [router]);
+  }, [router, original]);
+
   return (
     <Tr {...getRowProps()} onClick={handleClick}>
       {cells.map((cell) => (
-        <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
+        <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td> /* eslint-disable-line react/jsx-key */
       ))}
     </Tr>
   );
@@ -65,7 +63,7 @@ export const ItemList = () => {
     return _.flow(
       _.get('rows'),
       _.map('doc'),
-      _.filter({ type: 'item' })
+      _.filter({ type: 'item' }),
     )(allDocs.data);
   }, [allDocs.data]);
 
@@ -83,10 +81,10 @@ export const ItemList = () => {
                 ? accessorFactoryMap[type](name)
                 : name) as any,
             }),
-            fields
+            fields,
           ),
-        })
-      )
+        }),
+      ),
     )(configFetch.config);
   }, [configFetch.config]);
 
@@ -104,9 +102,9 @@ export const ItemList = () => {
           <TableCaption>Items in Storage</TableCaption>
           <Thead>
             {headerGroups.map(({ getHeaderGroupProps, headers }) => (
-              <Tr {...getHeaderGroupProps()}>
+              <Tr {...getHeaderGroupProps()}> {/* eslint-disable-line react/jsx-key */}
                 {headers.map(({ getHeaderProps, render }) => (
-                  <Th align='center' {...getHeaderProps()}>
+                  <Th align='center' {...getHeaderProps()}> {/* eslint-disable-line react/jsx-key */}
                     {render('Header')}
                   </Th>
                 ))}
@@ -117,7 +115,7 @@ export const ItemList = () => {
             {rows.map((row) => {
               prepareRow(row);
               const { key } = row.getRowProps();
-              return <TableRow key={key} {...row}/>;
+              return <TableRow key={key} {...row} />;
             })}
           </Tbody>
         </Table>

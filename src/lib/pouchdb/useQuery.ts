@@ -29,7 +29,7 @@ export const useQuery = <Results, Model = {}>({
 
   const fetcher = useCallback(() => {
     return db.query<Results, Model>(fun, pouchdbOptions);
-  }, [db]);
+  }, [fun, db, pouchdbOptions]);
 
   return useSWR<PouchDB.Query.Response<Results>>(
     shouldPause ? null : ['query', fun],

@@ -32,12 +32,12 @@ export const getServerSideProps: GetServerSideProps<
 const AddToContainer = ({ location }: Props) => {
   const UserModel = useModel();
 
-  const item = useMemo(
+  const item = useMemo<TNewItemSchema>(
     () =>
       UserModel.merge(NewItemSchema).parse({
         location,
-      }),
-    [UserModel],
+      }) ,
+    [UserModel, location],
   );
 
   return (
@@ -47,7 +47,7 @@ const AddToContainer = ({ location }: Props) => {
       </AppHead>
       <VStack>
         <Heading>New Item in {location}</Heading>
-        <ViewItem<TNewItemSchema & typeof UserModel> type='new' item={item} />
+        <ViewItem<TNewItemSchema> type='new' item={item} />
       </VStack>
     </>
   );

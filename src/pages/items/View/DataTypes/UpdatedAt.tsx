@@ -25,3 +25,5 @@ export const UpdatedAt = memo(({ name }: Props) => {
     />
   );
 });
+
+UpdatedAt.displayName = 'UpdatedAtField';

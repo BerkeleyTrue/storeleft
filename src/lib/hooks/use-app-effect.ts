@@ -26,5 +26,5 @@ export const useAppEffect = (effect: EffectCallback, deps: DependencyList) => {
         destructorRef.current();
       }
     };
-  }, deps);
+  }, [...deps, effect]); /* eslint-disable-line react-hooks/exhaustive-deps */
 };

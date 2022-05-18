@@ -1,25 +1,25 @@
 import * as R from 'remeda';
 import { Union } from 'ts-toolbelt';
-import { Input } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import {
   AutoComplete,
   AutoCompleteCreatable,
   AutoCompleteInput,
+  AutoCompleteInputProps,
   AutoCompleteItem,
   AutoCompleteList,
-  AutoCompleteTag,
+  AutoCompleteProps,
+  UseAutoCompleteReturn,
 } from '@choc-ui/chakra-autocomplete';
 
 import { useQuery } from '../../../../lib/pouchdb/useQuery';
+import { useBoolean } from '@chakra-ui/hooks';
 
 type Paths = [string[]];
 
-type OnChange = Union.NonNullable<
-  Parameters<typeof AutoComplete>[0]['onChange']
->;
+type OnChange = Union.NonNullable<AutoCompleteProps['onChange']>;
 
 interface Props {
   name: string;
@@ -34,10 +34,12 @@ interface Props {
 export const PathInput = ({ name, disabled }: Props) => {
   const [field, , helpers] = useField<string>(name || '');
   const queryResponse = useQuery<Paths>({ fun: 'storeleft/containers' });
+  const [hasQuery, setQuery] = useBoolean(false);
 
   const handleChange = useCallback<OnChange>(
     (values) => {
       helpers.setValue(values.join('/'));
+      setQuery.off();
     },
     [helpers],
   );
@@ -52,8 +54,32 @@ export const PathInput = ({ name, disabled }: Props) => {
   const list = useMemo<string[]>(() => {
     const pathTree: Paths =
       queryResponse?.data?.rows?.[0]?.value || ([] as string[]);
-    return pathTree?.[value.length] || [];
+    return R.uniq(pathTree?.[value.length] || []);
   }, [queryResponse.data, value]);
+
+  const handleKeyDown = useCallback<
+    NonNullable<AutoCompleteInputProps['onKeyDown']>
+  >(
+    ({ key }) => {
+      if (!hasQuery && (key === 'Delete' || key === 'Backspace')) {
+        helpers.setValue(R.dropLast(value, 1).join('/'));
+      }
+    },
+    [helpers.setValue, value],
+  );
+
+  const handleInputChange = useCallback<
+    NonNullable<AutoCompleteInputProps['onChange']>
+  >(
+    ({ target: { value } }) => {
+      if (value) {
+        setQuery.on();
+      } else {
+        setQuery.off();
+      }
+    },
+    [setQuery],
+  );
 
   return (
     <AutoComplete
@@ -65,15 +91,15 @@ export const PathInput = ({ name, disabled }: Props) => {
       value={value}
       listAllValuesOnFocus
     >
-      <AutoCompleteInput id={name} name={name} disabled={disabled}>
-        {({ tags }) =>
-          tags.map((tag) => (
-            <AutoCompleteTag
-              key={tag.label}
-              label={tag.label}
-              onRemove={tag.onRemove}
-            />
-          ))
+      <AutoCompleteInput
+        id={name}
+        name={name}
+        disabled={disabled}
+        onKeyDown={handleKeyDown}
+        onChange={handleInputChange}
+      >
+        {({ tags }: { tags: UseAutoCompleteReturn['tags'] }) =>
+          tags.map(({ label }) => label).join('/')
         }
       </AutoCompleteInput>
       <AutoCompleteList>

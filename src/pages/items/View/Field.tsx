@@ -20,7 +20,7 @@ export const Field = ({ displayName, type, name, disabled }: Props) => {
       <FormLabel htmlFor={name} fontSize='sm' fontWeight='md' color='gray.50'>
         {displayName}
       </FormLabel>
-      {type === 'string' && <Text name={name} disabled={disabled}/>}
+      {type === 'string' && <Text name={name} disabled={disabled} />}
       {type === 'updatedAt' && <UpdatedAt name={name} />}
       {type === 'path' && <PathInput name={name} disabled={disabled} />}
       {type === 'date' && (

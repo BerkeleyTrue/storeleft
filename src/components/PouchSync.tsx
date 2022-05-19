@@ -30,12 +30,7 @@ export const PouchSync = ({ children }: PropsWithChildren<{}>) => {
 
   useAppEffect(() => {
     const remoteUrl = getRemoteUrl();
-    toast({
-      title: `Syncing local '${db.name}' to remote '${dbName}'...`,
-      status: 'info',
-      variant: 'solid',
-      isClosable: true,
-    });
+    console.log(`Syncing local '${db.name}' to remote '${dbName}'...`);
 
     const syncSubscription = db.replicate.from(remoteUrl).on('complete', () => {
       toast({
@@ -69,6 +64,9 @@ export const PouchSync = ({ children }: PropsWithChildren<{}>) => {
 
   useEffect(() => {
     db.put(ddoc)
+      .then(({ id, rev}) => {
+        console.log(`Index saved: ${id} ${rev}`);
+      })
       .catch((err) => {
         if (err.name !== 'conflict') {
           toast({
@@ -80,14 +78,6 @@ export const PouchSync = ({ children }: PropsWithChildren<{}>) => {
           });
         }
       })
-      .then(() => {
-        toast({
-          title: 'Index saved',
-          status: 'info',
-          variant: 'solid',
-          isClosable: true,
-        });
-      });
   }, [db, hasSynced, toast]);
 
   return <>{children}</>;

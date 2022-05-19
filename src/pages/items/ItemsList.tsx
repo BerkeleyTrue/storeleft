@@ -14,6 +14,7 @@ import {
   TableContainer,
   VStack,
   TableCaption,
+  Spinner,
 } from '@chakra-ui/react';
 
 import { useAllDocs } from '../../lib/pouchdb/useAllDocs';
@@ -47,7 +48,9 @@ export const TableRow = ({ getRowProps, cells, original }: Row) => {
   return (
     <Tr {...getRowProps()} onClick={handleClick}>
       {cells.map((cell) => (
-        <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td> /* eslint-disable-line react/jsx-key */
+        /* eslint-disable react/jsx-key */
+        <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
+        /* eslint-enable react/jsx-key */
       ))}
     </Tr>
   );
@@ -94,32 +97,42 @@ export const ItemList = () => {
       data,
     });
 
+  if (!allDocs.data && allDocs.error) {
+    throw allDocs.error;
+  }
+
   return (
     <VStack>
       <Heading>Items</Heading>
-      <TableContainer>
-        <Table variant='striped' {...getTableProps()}>
-          <TableCaption>Items in Storage</TableCaption>
-          <Thead>
-            {headerGroups.map(({ getHeaderGroupProps, headers }) => (
-              <Tr {...getHeaderGroupProps()}> {/* eslint-disable-line react/jsx-key */}
-                {headers.map(({ getHeaderProps, render }) => (
-                  <Th align='center' {...getHeaderProps()}> {/* eslint-disable-line react/jsx-key */}
-                    {render('Header')}
-                  </Th>
-                ))}
-              </Tr>
-            ))}
-          </Thead>
-          <Tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
-              prepareRow(row);
-              const { key } = row.getRowProps();
-              return <TableRow key={key} {...row} />;
-            })}
-          </Tbody>
-        </Table>
-      </TableContainer>
+      {!allDocs.data ? (
+        <Spinner />
+      ) : (
+        <TableContainer>
+          <Table variant='striped' {...getTableProps()}>
+            <TableCaption>Items in Storage</TableCaption>
+            <Thead>
+              {headerGroups.map(({ getHeaderGroupProps, headers }) => (
+                /* eslint-disable react/jsx-key */
+                <Tr {...getHeaderGroupProps()}>
+                  {headers.map(({ getHeaderProps, render }) => (
+                    <Th align='center' {...getHeaderProps()}>
+                      {render('Header')}
+                    </Th>
+                  ))}
+                </Tr>
+                /* eslint-enable react/jsx-key */
+              ))}
+            </Thead>
+            <Tbody {...getTableBodyProps()}>
+              {rows.map((row) => {
+                prepareRow(row);
+                const { key } = row.getRowProps();
+                return <TableRow key={key} {...row} />;
+              })}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      )}
     </VStack>
   );
 };

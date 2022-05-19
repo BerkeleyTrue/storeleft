@@ -38,6 +38,7 @@ export const PouchSync = ({ children }: PropsWithChildren<{}>) => {
         status: 'success',
         variant: 'solid',
         isClosable: true,
+        position: 'bottom',
       });
       setHasSynced(true);
     });

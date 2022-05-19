@@ -107,7 +107,7 @@ export const PathInput = ({ name, disabled }: Props) => {
         {list.map((listItem, cid) => (
           <AutoCompleteItem
             key={`option-${listItem}-${cid}`}
-            value={listItem}
+            value={listItem || ''}
             _selected={{ bg: 'whiteAlpha.200' }}
             _focus={{ bg: 'whiteAlpha.100' }}
             _hover={{ bg: 'cyan' }}

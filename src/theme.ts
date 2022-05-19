@@ -11,7 +11,7 @@ const fonts = {
 };
 
 const breakpoints = createBreakpoints({
-  sm: '30em',
+  sm: '22em',
   md: '48em',
   lg: '62em',
   xl: '80em',

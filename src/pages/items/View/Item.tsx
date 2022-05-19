@@ -183,7 +183,7 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
             Duplicate
           </Button>
           <Button disabled={isNewItem} onClick={addToContainer}>
-            Add to Container
+            Add to
           </Button>
           <Button onClick={resetForm}>Reset</Button>
         </ButtonGroup>

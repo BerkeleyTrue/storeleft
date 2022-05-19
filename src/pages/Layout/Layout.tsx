@@ -44,6 +44,7 @@ export const Layout = ({ children }: PropsWithChildren<{}>) => {
         maxH='100vh'
         maxW={contentWidth}
         flexDir='column'
+        width='100%'
       >
         <AppBar h={headerSize} onButtonClick={setSidebar.toggle} />
 

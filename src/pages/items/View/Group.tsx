@@ -49,8 +49,11 @@ export const Group = memo(({ displayName, rev, fields }: Props) => {
               rounded='full'
               textTransform='uppercase'
               fontSize='xs'
+              maxW='70%'
             >
-              <Badge>rev: {rev}</Badge>
+              <Badge maxW='100%' textOverflow='ellipsis' overflow='hidden'>
+                rev: {rev}
+              </Badge>
             </Box>
           </>
         )}

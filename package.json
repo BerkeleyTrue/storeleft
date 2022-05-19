@@ -28,6 +28,7 @@
     "pouchdb": "^7.3.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-swipeable": "^7.0.0",
     "react-table": "^7.7.0",
     "remeda": "^0.0.32",
     "rxjs": "^7.5.5",

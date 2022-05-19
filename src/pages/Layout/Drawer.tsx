@@ -1,6 +1,13 @@
-import { ComponentProps, ReactEventHandler } from 'react';
-import { Box, Drawer, DrawerContent, DrawerOverlay } from '@chakra-ui/react';
+import { ComponentProps, MouseEventHandler, ReactEventHandler, useCallback } from 'react';
+import {
+  Box,
+  Drawer,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerOverlay,
+} from '@chakra-ui/react';
 import { SideBarContent } from './SideBarContent';
+import { useSwipeable } from 'react-swipeable';
 
 const sidebarStyles = {
   bg: 'darker.800',
@@ -14,6 +21,13 @@ interface Props {
 }
 
 export function AppDrawer({ isOpen, onClose, sidebarWidth }: Props) {
+
+  const handlers = useSwipeable({
+    preventScrollOnSwipe: true,
+    onSwipedLeft: onClose as () => void,
+    trackMouse: true,
+  });
+
   return (
     <>
       <Box
@@ -25,14 +39,11 @@ export function AppDrawer({ isOpen, onClose, sidebarWidth }: Props) {
       >
         <SideBarContent />
       </Box>
-      <Drawer
-        isOpen={isOpen}
-        onClose={onClose as () => void}
-        placement='left'
-      >
+      <Drawer isOpen={isOpen} onClose={onClose as () => void} placement='left'>
         <DrawerOverlay />
-        <DrawerContent pt='8' px='4' {...sidebarStyles}>
-          <SideBarContent />
+        <DrawerContent pt='8' px='4'>
+          <DrawerCloseButton />
+          <SideBarContent swipeHandlers={handlers} />
         </DrawerContent>
       </Drawer>
     </>

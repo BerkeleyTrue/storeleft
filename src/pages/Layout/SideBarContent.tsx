@@ -1,4 +1,5 @@
 import { Flex, Divider, VStack, Spacer, Text } from '@chakra-ui/react';
+import { SwipeableHandlers } from 'react-swipeable';
 
 import { NavItem } from './Nav/NavItem';
 
@@ -8,16 +9,16 @@ const mainNav = [
     href: '/',
   },
   {
-    name: 'Add Item',
-    href: '/items/create',
-  },
-  {
     name: 'Items',
     href: '/items',
   },
   {
+    name: 'Add Item',
+    href: '/items/create',
+  },
+  {
     name: 'Places',
-    href: '/containers',
+    href: '/places',
   },
 ];
 
@@ -32,7 +33,7 @@ const secondary = [
   },
 ];
 
-export const SideBarContent = () => {
+export const SideBarContent = ({ swipeHandlers }: { swipeHandlers?: SwipeableHandlers }) => {
   return (
     <Flex
       as='nav'
@@ -40,6 +41,7 @@ export const SideBarContent = () => {
       w='100%'
       flexFlow='column'
       justifyContent='space-between'
+      {...swipeHandlers}
     >
       <Flex px='4' py='5' align='center'>
         <Text fontSize='2xl' ml='2' color={'white'} fontWeight='semibold'>

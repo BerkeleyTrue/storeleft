@@ -41,8 +41,9 @@ export const PathInput = ({ name, disabled }: Props) => {
       helpers.setValue(values.join('/'));
       setQuery.off();
     },
-    [helpers, setQuery],
+    [helpers.setValue, setQuery.off], /* eslint-disable-line react-hooks/exhaustive-deps */
   );
+
   const value = useMemo<string[]>(() => {
     const paths = field.value.split('/');
     if (!paths[0]) {
@@ -55,7 +56,7 @@ export const PathInput = ({ name, disabled }: Props) => {
     const pathTree: Paths =
       queryResponse?.data?.rows?.[0]?.value || ([] as string[]);
     return R.uniq(pathTree?.[value.length] || []);
-  }, [queryResponse.data, value]);
+  }, [queryResponse.data, value.length]);
 
   const handleKeyDown = useCallback<
     NonNullable<AutoCompleteInputProps['onKeyDown']>

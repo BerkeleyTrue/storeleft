@@ -127,11 +127,11 @@ export const ViewItem = <Model extends {}>(props: Props<Model>) => {
 
   const resetForm = useCallback(() => {
     formik.resetForm({ values: initialValues });
-  }, [formik, initialValues]);
+  }, [formik.resetForm, initialValues]); /* eslint-disable-line react-hooks/exhaustive-deps */
 
   useEffect(() => {
     formik.resetForm({ values: initialValues });
-  }, [formik, initialValues]);
+  }, [formik.resetForm, initialValues]); /* eslint-disable-line react-hooks/exhaustive-deps */
 
   const _id = isNewItem ? '' : props.item?._id;
   const duplicate = useCallback(() => {

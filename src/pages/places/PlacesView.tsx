@@ -73,6 +73,10 @@ export const PlacesView = ({}: Props) => {
     return isNode(tree) ? tree : tree[0];
   }, [tree, currNode]);
 
+  const handleClickOnParent = useCallback(() => {
+    setName(node?.parentName);
+  }, [setName, node?.parentName]);
+
   if (!allDocsRes.data) {
     return (
       <VStack>
@@ -89,7 +93,7 @@ export const PlacesView = ({}: Props) => {
       {node ? (
         <>
           <StatGroup w='80%'>
-            <Stat as='button' onClick={() => setName(node.parentName)}>
+            <Stat as='button' onClick={handleClickOnParent}>
               <StatLabel>Located In</StatLabel>
               <StatNumber>{node.parentName}</StatNumber>
             </Stat>

@@ -1,11 +1,10 @@
 import * as R from 'remeda';
 import { Union } from 'ts-toolbelt';
 import { useField } from 'formik';
-import { useCallback, useMemo, useState } from 'react';
-
+import { useCallback, useMemo } from 'react';
+import { useBoolean } from '@chakra-ui/hooks';
 import {
   AutoComplete,
-  AutoCompleteCreatable,
   AutoCompleteInput,
   AutoCompleteInputProps,
   AutoCompleteItem,
@@ -15,7 +14,6 @@ import {
 } from '@choc-ui/chakra-autocomplete';
 
 import { useQuery } from '../../../../lib/pouchdb/useQuery';
-import { useBoolean } from '@chakra-ui/hooks';
 
 type Paths = [string[]];
 

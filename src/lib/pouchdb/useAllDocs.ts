@@ -8,18 +8,18 @@ export interface UseAllDocsOptions {
    * Listen for updates through the changes api in addition to SWR updating
    */
   isLive?: boolean;
-  query: PouchDB.Core.AllDocsOptions;
+  query?: PouchDB.Core.AllDocsOptions;
 }
 
-export const useAllDocs = ({
+export const useAllDocs = <Content extends {}>({
   isLive = false,
-  query: { limit, skip, include_docs, ...rest },
-}: UseAllDocsOptions): SWRResponse<PouchDB.Core.AllDocsResponse<{}>> => {
+  query: { limit, skip, include_docs, ...rest } = {},
+}: UseAllDocsOptions): SWRResponse<PouchDB.Core.AllDocsResponse<Content>> => {
 
   const { db } = usePouchDbContext();
 
   const allDocsFetcher = useCallback(() => {
-    return db.allDocs({ skip, limit, include_docs, ...rest });
+    return db.allDocs<Content>({ skip, limit, include_docs, ...rest });
   }, [db, skip, limit, include_docs, rest]);
 
   const res = useSWR(['allDocs', limit, skip, include_docs], allDocsFetcher);
